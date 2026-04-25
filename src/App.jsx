@@ -77,6 +77,15 @@ function ExternalIcon() {
   );
 }
 
+function SourceIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
+      <path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z" />
+      <path d="M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+    </svg>
+  );
+}
+
 function CloseIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
@@ -213,7 +222,9 @@ function NotesPanel({ onClose }) {
   );
 }
 
-function PdfPanel({ onClose }) {
+function PdfPanel({ onClose, page }) {
+  const src = page ? `${pdfUrl}#page=${page}` : pdfUrl;
+
   return (
     <aside className="panel pdf-panel" aria-label="PDF skripta">
       <div className="notes-header">
@@ -224,7 +235,7 @@ function PdfPanel({ onClose }) {
         <div className="panel-actions">
           <a
             className="icon-button"
-            href={pdfUrl}
+            href={src}
             target="_blank"
             rel="noreferrer"
             aria-label="Otvori PDF u novom tabu"
@@ -238,7 +249,12 @@ function PdfPanel({ onClose }) {
         </div>
       </div>
       <div className="pdf-body">
-        <iframe className="pdf-frame" title="Programsko inženjerstvo i informacijski sustavi PDF" src={pdfUrl} />
+        <iframe
+          key={src}
+          className="pdf-frame"
+          title="Programsko inženjerstvo i informacijski sustavi PDF"
+          src={src}
+        />
       </div>
     </aside>
   );
@@ -253,6 +269,7 @@ function App() {
   const [quizFinished, setQuizFinished] = useState(false);
   const [pendingMode, setPendingMode] = useState(null);
   const [studyPanel, setStudyPanel] = useState(null);
+  const [pdfPage, setPdfPage] = useState(null);
 
   const currentQuestion = questions[currentIndex];
   const score = answers.filter((item) => item.isCorrect).length;
@@ -365,7 +382,20 @@ function App() {
       return;
     }
 
+    setPdfPage(null);
     setStudyPanel((value) => (value === "pdf" ? null : "pdf"));
+  }
+
+  function handleSourceOpen(source) {
+    const src = `${pdfUrl}#page=${source.pdfPage}`;
+
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      window.open(src, "_blank", "noreferrer");
+      return;
+    }
+
+    setPdfPage(source.pdfPage);
+    setStudyPanel("pdf");
   }
 
   if (quizFinished) {
@@ -521,7 +551,20 @@ function App() {
         </div>
 
         <div className="question-card">
-          <span className="topic-badge">{currentQuestion.topic}</span>
+          <div className="question-meta">
+            <span className="topic-badge">{currentQuestion.topic}</span>
+            {currentQuestion.source ? (
+              <button
+                className="icon-button topic-source-button"
+                type="button"
+                aria-label={`Otvori izvor u PDF-u: ${currentQuestion.source.title}, stranica ${currentQuestion.source.page}`}
+                title={`Otvori u PDF-u: ${currentQuestion.source.title}, str. ${currentQuestion.source.page}`}
+                onClick={() => handleSourceOpen(currentQuestion.source)}
+              >
+                <SourceIcon />
+              </button>
+            ) : null}
+          </div>
           <h2>{currentQuestion.prompt}</h2>
 
           <div className="options-grid">
@@ -589,7 +632,7 @@ function App() {
       </section>
 
       {studyPanel === "notes" ? <NotesPanel onClose={() => setStudyPanel(null)} /> : null}
-      {studyPanel === "pdf" ? <PdfPanel onClose={() => setStudyPanel(null)} /> : null}
+      {studyPanel === "pdf" ? <PdfPanel page={pdfPage} onClose={() => setStudyPanel(null)} /> : null}
       </div>
 
       {pendingMode ? (

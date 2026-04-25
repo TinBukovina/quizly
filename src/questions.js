@@ -1,6 +1,211 @@
 const optionIds = ["a", "b", "c", "d"];
 
-function q({ id, topic, prompt, answers, correct, explanation }) {
+function source({ title, page, hint }) {
+  return {
+    title,
+    page,
+    pdfPage: page <= 36 ? page - 10 : page - 26,
+    hint,
+  };
+}
+
+const sources = {
+  metode: source({
+    title: "1. Metode razvoja softvera",
+    page: 11,
+    hint: "Uvod u svrhu odabira metode razvoja.",
+  }),
+  waterfallIntro: source({
+    title: "1.1. Metoda vodopada",
+    page: 11,
+    hint: "Osnovna ideja, redoslijed i prikladnost metode vodopada.",
+  }),
+  waterfallRequirements: source({
+    title: "1.1. Metoda vodopada - Analiza zahtjeva",
+    page: 12,
+    hint: "Prva faza u kojoj se definiraju zahtjevi i funkcionalnosti.",
+  }),
+  waterfallDesign: source({
+    title: "1.1. Metoda vodopada - Dizajn sustava",
+    page: 12,
+    hint: "Faza u kojoj se zahtjevi pretvaraju u arhitekturu sustava.",
+  }),
+  waterfallImplementation: source({
+    title: "1.1. Metoda vodopada - Implementacija i testiranje jedinica",
+    page: 12,
+    hint: "Faza izrade programskog koda i zasebnog testiranja jedinica.",
+  }),
+  waterfallIntegration: source({
+    title: "1.1. Metoda vodopada - Integracija i testiranje sustava",
+    page: 13,
+    hint: "Faza povezivanja modula i provjere cjelovitog sustava.",
+  }),
+  waterfallRelease: source({
+    title: "1.1. Metoda vodopada - Puštanje u pogon",
+    page: 13,
+    hint: "Isporuka sustava nakon pozitivnih rezultata testiranja.",
+  }),
+  waterfallMaintenance: source({
+    title: "1.1. Metoda vodopada - Održavanje",
+    page: 13,
+    hint: "Rad nakon isporuke: greške, prilagodbe, usavršavanje i prevencija.",
+  }),
+  waterfallProsCons: source({
+    title: "1.1. Metoda vodopada - Prednosti i nedostaci",
+    page: 14,
+    hint: "Prednosti jasnog slijeda i slabosti kod promjena zahtjeva.",
+  }),
+  agile: source({
+    title: "1.2. Agilne metode",
+    page: 14,
+    hint: "Agilni manifest, vrijednosti i iterativni razvoj.",
+  }),
+  scrum: source({
+    title: "1.2.1. Scrum",
+    page: 15,
+    hint: "Scrum kao razvojni okvir, njegove uloge, događaji i artefakti.",
+  }),
+  scrumRoles: source({
+    title: "1.2.1.1. Uloge u Scrum timu",
+    page: 16,
+    hint: "Scrum Master, vlasnik proizvoda i razvojni tim.",
+  }),
+  scrumArtifacts: source({
+    title: "1.2.1.2. Artefakti",
+    page: 17,
+    hint: "Product Backlog, Sprint Backlog, inkrement, definicija gotovog i burn-down grafikon.",
+  }),
+  scrumEvents: source({
+    title: "1.2.1.3. Događaji u Scrumu",
+    page: 20,
+    hint: "Sprint, planiranje, Daily Scrum, review i retrospektiva.",
+  }),
+  kanban: source({
+    title: "1.2.2. Kanban",
+    page: 25,
+    hint: "Vizualizacija rada, WIP ograničenja, tok rada i Kanban ploča.",
+  }),
+  scrumKanban: source({
+    title: "1.2.2. Scrum ili Kanban",
+    page: 32,
+    hint: "Usporedba sprintova, kontinuiranog toka, uloga i promjena.",
+  }),
+  scrumban: source({
+    title: "1.2.3. Scrumban",
+    page: 34,
+    hint: "Hibrid Scruma i Kanbana.",
+  }),
+  scrumOfScrums: source({
+    title: "1.2.4. Scrum of Scrums",
+    page: 35,
+    hint: "Koordinacija više Scrum timova.",
+  }),
+  docs: source({
+    title: "3. Dokumentacija",
+    page: 53,
+    hint: "Podjela dokumentacije proizvoda i procesa.",
+  }),
+  systemDocs: source({
+    title: "3.1.1. Sistemska dokumentacija",
+    page: 53,
+    hint: "Zahtjevi, arhitektura, kod, validacija i testiranje.",
+  }),
+  userDocs: source({
+    title: "3.1.2. Korisnička dokumentacija",
+    page: 55,
+    hint: "Upute za krajnje korisnike i sistemske administratore.",
+  }),
+  processDocs: source({
+    title: "3.1.3. Dokumentacija procesa",
+    page: 54,
+    hint: "Planovi, rasporedi, izvještaji, standardi i bilješke razvoja.",
+  }),
+  docQuality: source({
+    title: "3.2. Kvaliteta dokumentacije",
+    page: 56,
+    hint: "Dokumentacija treba biti jasna, precizna, relevantna i stalno nadopunjavana.",
+  }),
+  docGenerators: source({
+    title: "3.3. Generatori dokumentacije",
+    page: 56,
+    hint: "Doxygen, JavaDoc i drugi alati za generiranje dokumentacije.",
+  }),
+};
+
+function sourceForQuestion(id, topic) {
+  if (id.startsWith("waterfall-6") || id === "waterfall-7" || id === "waterfall-8") {
+    return sources.waterfallRequirements;
+  }
+  if (id === "waterfall-9" || id === "waterfall-10" || id === "waterfall-11") {
+    return sources.waterfallDesign;
+  }
+  if (id === "waterfall-12" || id === "waterfall-13") {
+    return sources.waterfallImplementation;
+  }
+  if (id === "waterfall-14" || id === "waterfall-15") {
+    return sources.waterfallIntegration;
+  }
+  if (id === "waterfall-16") {
+    return sources.waterfallRelease;
+  }
+  if (id === "waterfall-17" || id === "waterfall-18" || id === "waterfall-19" || id === "waterfall-20") {
+    return sources.waterfallMaintenance;
+  }
+  if (id === "waterfall-21" || id === "waterfall-22" || id === "waterfall-23") {
+    return sources.waterfallProsCons;
+  }
+  if (id.startsWith("waterfall-")) {
+    return sources.waterfallIntro;
+  }
+  if (id.startsWith("agile-")) {
+    return sources.agile;
+  }
+  if (id.startsWith("scrum-artifacts-")) {
+    return sources.scrumArtifacts;
+  }
+  if (id.startsWith("scrum-events-")) {
+    return sources.scrumEvents;
+  }
+  if (id.startsWith("scrum-kanban-")) {
+    return sources.scrumKanban;
+  }
+  if (id.startsWith("scrum-") && topic === "Scrum uloge") {
+    return sources.scrumRoles;
+  }
+  if (id.startsWith("scrum-")) {
+    return sources.scrum;
+  }
+  if (id.startsWith("kanban-")) {
+    return sources.kanban;
+  }
+  if (id.startsWith("scrumban-")) {
+    return sources.scrumban;
+  }
+  if (id.startsWith("sos-")) {
+    return sources.scrumOfScrums;
+  }
+  if (topic === "Sistemska dokumentacija" || topic === "Dokumentacija testiranja") {
+    return sources.systemDocs;
+  }
+  if (topic === "Korisnička dokumentacija") {
+    return sources.userDocs;
+  }
+  if (topic === "Dokumentacija procesa") {
+    return sources.processDocs;
+  }
+  if (topic === "Generatori dokumentacije") {
+    return sources.docGenerators;
+  }
+  if (id === "docs-16" || id === "docs-16a" || id === "docs-17" || id === "docs-17a") {
+    return sources.docQuality;
+  }
+  if (id.startsWith("docs-")) {
+    return sources.docs;
+  }
+  return sources.metode;
+}
+
+function q({ id, topic, prompt, answers, correct, explanation, source: explicitSource }) {
   return {
     id,
     topic,
@@ -8,6 +213,7 @@ function q({ id, topic, prompt, answers, correct, explanation }) {
     options: answers.map((text, index) => ({ id: optionIds[index], text })),
     correctId: optionIds[correct],
     explanation,
+    source: explicitSource ?? sourceForQuestion(id, topic),
   };
 }
 
@@ -18,9 +224,9 @@ export const questions = [
     prompt: "Što najbolje opisuje metode razvoja softvera?",
     answers: [
       "Organizacijski pristupi prema kojima se planira, razvija i kontrolira rad na softveru.",
-      "Skup programskih jezika i biblioteka kojima se implementira sustav.",
-      "Tehnike testiranja kojima se provjerava samo završna verzija proizvoda.",
-      "Dokumenti koji opisuju arhitekturu, kod i korisničke upute.",
+      "Skup pravila kojima se određuje samo redoslijed pisanja programskog koda.",
+      "Tehnički postupci kojima se razvoj svodi prvenstveno na testiranje gotovog sustava.",
+      "Dokumentacijski okvir kojim se opisuje proizvod nakon što je razvoj završen.",
     ],
     correct: 0,
     explanation: "Metode razvoja govore kako se organizira rad na softverskom projektu.",
@@ -31,9 +237,9 @@ export const questions = [
     prompt: "Koja tvrdnja najbolje objašnjava zašto se ne razvija svaki softver isto?",
     answers: [
       "Zato što izbor pristupa ovisi o proizvodu, korisnicima, timu i načinu rada.",
-      "Zato što se za svaki softver mora koristiti drukciji programski jezik.",
-      "Zato što svaka metoda razvoja potpuno zabranjuje dokumentaciju.",
-      "Zato što je testiranje uvijek važnije od planiranja i dizajna sustava.",
+      "Zato što se metoda bira prvenstveno prema tome koliko brzo tim želi početi pisati kod.",
+      "Zato što svaki projekt ima isti proces, ali se mijenja samo količina dokumentacije.",
+      "Zato što je izbor metode određen isključivo tehnologijom u kojoj se sustav implementira.",
     ],
     correct: 0,
     explanation: "Metoda se bira prema kontekstu projekta, a ne postoji jedan univerzalan pristup.",
@@ -44,9 +250,9 @@ export const questions = [
     prompt: "Koji je cilj metode razvoja softvera?",
     answers: [
       "Uciniti razvoj uređenim, učinkovitim i predvidivim.",
-      "Ukloniti potrebu za komunikacijom s korisnikom.",
-      "Osigurati da se kod piše prije definiranja zahtjeva.",
-      "Zamijeniti testiranje detaljnom dokumentacijom.",
+      "Urediti razvoj tako da se sve odluke donesu tek nakon implementacije.",
+      "Učiniti razvoj predvidivim tako da se promjene zahtjeva uvijek blokiraju.",
+      "Smanjiti razvoj na pisanje dokumentacije prije bilo kakve provjere softvera.",
     ],
     correct: 0,
     explanation: "U bilješkama je cilj metoda razvoja uređen, učinkovit i predvidiv razvoj.",
@@ -57,9 +263,9 @@ export const questions = [
     prompt: "Koja recenica najbolje opisuje svrhu predmeta iz bilješki?",
     answers: [
       "Naučiti kako se softver planira, razvija, testira, dokumentira i modelira u praksi.",
-      "Naučiti isključivo sintaksu programskih jezika potrebnih za implementaciju sustava.",
-      "Naučiti samo generirati dokumentaciju iz komentara u izvornom kodu.",
-      "Naučiti samo razlike između Scrum i Kanban sastanaka.",
+      "Naučiti kako se softver planira i dokumentira, ali bez naglaska na testiranje i modeliranje.",
+      "Naučiti kako se softver razvija kroz metode, ali bez povezivanja s praktičnim radom na sustavu.",
+      "Naučiti primarno alate za dokumentiranje koda, uz manji naglasak na razvojni proces.",
     ],
     correct: 0,
     explanation: "Svrha predmeta je shvatiti prakticni proces nastanka softvera i informacijskih sustava.",
@@ -70,9 +276,9 @@ export const questions = [
     prompt: "Koja tvrdnja najtocnije opisuje metodu vodopada?",
     answers: [
       "Linearan i sekvencijalan model u kojem se faze izvode jedna nakon druge.",
-      "Iterativan okvir s kratkim sprintovima i stalnim promjenama prioriteta.",
-      "Metoda neprekidne isporuke bez definiranog redoslijeda faza.",
-      "Tehnika dokumentiranja koda iz komentara u izvornim datotekama.",
+      "Linearan model u kojem se faze mogu često vraćati unatrag bez većeg utjecaja na plan.",
+      "Sekvencijalan model u kojem se implementacija započinje prije potpunog definiranja zahtjeva.",
+      "Model s jasno definiranim fazama, ali s kontinuiranom isporukom nakon svake male promjene.",
     ],
     correct: 0,
     explanation: "Vodopad je linearan i sekvencijalan model razvoja.",
@@ -83,9 +289,9 @@ export const questions = [
     prompt: "Koja tvrdnja o nastanku metode vodopada odgovara bilješkama?",
     answers: [
       "Riječ je o jednoj od najstarijih metoda, povezanoj s Winstonom W. Royceom i 1970. godinom.",
-      "Nastala je 2001. kao dio Agilnog manifesta.",
-      "Prvi put se spominje 1986. u članku o timskom radu i ragbiju.",
-      "Razvila ju je Toyota 1940-ih u sklopu proizvodnje upravo na vrijeme.",
+      "Riječ je o starijoj metodi povezanoj s Royceom, ali se u bilješkama smješta nakon agilnih metoda.",
+      "Riječ je o modelu koji je nastao kao reakcija na Scrum i iterativni razvoj.",
+      "Riječ je o metodi koja se razvila iz proizvodnog toka, ali se u softveru koristi tek za dokumentaciju.",
     ],
     correct: 0,
     explanation: "Bilješke navode da je metoda vodopada najstarija metoda i povezuju je s Royceom 1970.",
@@ -96,9 +302,9 @@ export const questions = [
     prompt: "Što znači da je vodopad sekvencijalan?",
     answers: [
       "Da svaka faza slijedi nakon prethodne i ne preskace se redoslijed.",
-      "Da se sve faze izvode paralelno kako bi se ubrzao razvoj.",
-      "Da se zahtjevi definiraju tek nakon implementacije.",
-      "Da korisnik sam odlučuje kada se prelazi u iducu fazu bez tima.",
+      "Da se faze izvode redom, ali se nakon svake iteracije vraćaju na početak.",
+      "Da se faze mogu djelomično preklapati, ali uvijek moraju završiti u istom sprintu.",
+      "Da redoslijed postoji, ali se faze smiju preskakati ako su zahtjevi dovoljno jasni.",
     ],
     correct: 0,
     explanation: "Sekvencijalnost znači rad po unaprijed određenom slijedu.",
@@ -109,9 +315,9 @@ export const questions = [
     prompt: "Za kakve projekte je metoda vodopada najprikladnija?",
     answers: [
       "Za projekte s jasnim i stabilnim zahtjevima koji se ne mijenjaju često.",
-      "Za projekte u kojima korisnik svaki dan mijenja prioritete i opseg.",
-      "Za projekte bez dokumentacije i bez definirane arhitekture.",
-      "Za projekte u kojima se proizvod isporucuje nakon svakog dnevnog sastanka.",
+      "Za projekte u kojima su zahtjevi djelomično poznati, ali se očekuju česte promjene opsega.",
+      "Za projekte u kojima se arhitektura planira naknadno, nakon prve isporuke korisniku.",
+      "Za projekte u kojima tim želi često isporučivati male inkremente bez fiksnog slijeda faza.",
     ],
     correct: 0,
     explanation: "Vodopad bolje funkcionira kada su zahtjevi unaprijed poznati i stabilni.",
@@ -143,9 +349,9 @@ export const questions = [
     prompt: "Na koje pitanje odgovara analiza zahtjeva?",
     answers: [
       "Što sustav treba raditi?",
-      "Kako će se moduli spojiti u cjelinu?",
-      "Je li sustav spreman za stvarnu uporabu?",
-      "Kako se preostali posao smanjuje kroz vrijeme?",
+      "Kako će zahtjevi biti pretvoreni u arhitekturu sustava?",
+      "Jesu li implementirane jedinice ispravno povezane u cjelinu?",
+      "Koje promjene treba napraviti nakon što je sustav već u uporabi?",
     ],
     correct: 0,
     explanation: "Analiza zahtjeva definira potrebe, zahtjeve i funkcionalnosti sustava.",
@@ -157,8 +363,8 @@ export const questions = [
     answers: [
       "Naručitelj softvera i razvojni tim.",
       "Samo razvojni tim bez naručitelja.",
-      "Samo krajnji korisnici nakon isporuke.",
-      "Scrum Master i predstavnici više Scrum timova.",
+      "Naručitelj i testni tim tek nakon što je sustav implementiran.",
+      "Razvojni tim i korisnici tek u fazi puštanja u pogon.",
     ],
     correct: 0,
     explanation: "U analizi zahtjeva sudjeluju naručitelj i razvojni tim kako bi se razumio problem.",
@@ -171,7 +377,7 @@ export const questions = [
       "Dokument sa zahtjevima.",
       "Arhitektura sustava.",
       "Skup testiranih modula.",
-      "Burn-down grafikon.",
+      "Plan integracije i isporuke sustava.",
     ],
     correct: 0,
     explanation: "Dokument sa zahtjevima je osnova za daljnji razvoj.",
@@ -182,9 +388,9 @@ export const questions = [
     prompt: "Na koje pitanje odgovara dizajn sustava?",
     answers: [
       "Kako će sustav biti strukturiran i izveden?",
-      "Koje su greške ostale nakon isporuke?",
-      "Što je sljedeće najvažnije za izraditi?",
-      "Koji član tima preuzima koji zadatak u sprintu?",
+      "Što sustav treba raditi iz perspektive zahtjeva korisnika?",
+      "Jesu li pojedine programske jedinice ispravno implementirane?",
+      "Koje prilagodbe treba napraviti nakon puštanja sustava u rad?",
     ],
     correct: 0,
     explanation: "Dizajn sustava pretvara zahtjeve u strukturu pogodnu za implementaciju.",
@@ -196,8 +402,8 @@ export const questions = [
     answers: [
       "Arhitektura sustava.",
       "Dokument sa zahtjevima.",
-      "Popis testova koji su neuspjeli.",
-      "Korisnička dokumentacija.",
+      "Skup implementiranih i jedinicno testiranih modula.",
+      "Plan održavanja nakon puštanja u pogon.",
     ],
     correct: 0,
     explanation: "U PDF-u je rezultat faze dizajna sustava arhitektura sustava.",
@@ -209,8 +415,8 @@ export const questions = [
     answers: [
       "Kao tehničku osnovu na kojoj sustav radi, ako je relevantna za taj projekt.",
       "Kao obavezne fizicke dijelove bez kojih softver ne može postojati.",
-      "Kao graficke elemente korisničkog sučelja koje treba dizajnirati.",
-      "Kao Scrum artefakte koji opisuju stanje zadataka.",
+      "Kao dijelove arhitekture koji se uvijek moraju zasebno implementirati u kodu.",
+      "Kao popis korisničkih funkcionalnosti koje se tek trebaju definirati u zahtjevima.",
     ],
     correct: 0,
     explanation: "Ako hardver nije bitan za projekt, fokus dizajna ostaje na strukturi i arhitekturi softvera.",
@@ -221,9 +427,9 @@ export const questions = [
     prompt: "Što se događa u fazi implementacije i testiranja jedinica?",
     answers: [
       "Plan sustava prelazi u programski kod, a jedinice se zasebno testiraju.",
-      "Sustav se isporucuje naručitelju nakon pozitivnog testiranja.",
-      "Moduli se povezuju i testira se samo cijeli sustav.",
-      "Definiraju se korisničke price i poslovna pravila.",
+      "Zahtjevi se pretvaraju u arhitekturu sustava, a kod se piše tek kasnije.",
+      "Moduli se povezuju u cjelinu prije nego što se pojedinačno provjere.",
+      "Gotov sustav se isporučuje korisniku nakon završnog prihvatnog testiranja.",
     ],
     correct: 0,
     explanation: "U toj fazi sustav se razvija po manjim cjelinama i svaka se provjerava zasebno.",
@@ -234,9 +440,9 @@ export const questions = [
     prompt: "Koji je krajnji rezultat implementacije i testiranja jedinica?",
     answers: [
       "Skup modula koji su testirani kao jedinice.",
-      "Prilagodjeni Product Backlog.",
-      "Arhitektura sustava i hardverski zahtjevi.",
-      "Korisničke upute za krajnje korisnike.",
+      "Arhitekturni model koji tek opisuje buduću strukturu sustava.",
+      "Skup modula koji su povezani, ali nisu prethodno zasebno provjereni.",
+      "Integrirani sustav koji je već spreman za puštanje u pogon.",
     ],
     correct: 0,
     explanation: "PDF navodi da je rezultat te faze skup testiranih modula.",
@@ -247,9 +453,9 @@ export const questions = [
     prompt: "Što je cilj integracije i testiranja sustava?",
     answers: [
       "Provjeriti rade li jedinice zajedno kao cjelovit sustav.",
-      "Odrediti dugorocnu viziju proizvoda.",
-      "Napisati dokument zahtjeva prije početka razvoja.",
-      "Ograniciti WIP na Kanban ploci.",
+      "Provjeriti svaku jedinicu izolirano prije nego se poveže s drugima.",
+      "Pretvoriti dokument zahtjeva u arhitekturni opis sustava.",
+      "Isporučiti sustav korisniku bez dodatnog povezivanja modula.",
     ],
     correct: 0,
     explanation: "Moduli se povezuju u sustav i testira se cjelina.",
@@ -261,8 +467,8 @@ export const questions = [
     answers: [
       "Da se provodi u više koraka, postupnim povezivanjem dijelova.",
       "Da se cijeli sustav spaja odjednom bez medjukoraka.",
-      "Da se proizvod isporucuje svaki dan nakon Daily Scruma.",
-      "Da se zahtjevi mijenjaju nakon svake korisničke price.",
+      "Da se svaka jedinica testira samo izolirano i nikad kao dio cjeline.",
+      "Da se svaka faza razvoja preskače čim se pronađe prva greška.",
     ],
     correct: 0,
     explanation: "Inkrementalna integracija znači povezivanje u postupnim koracima.",
@@ -273,9 +479,9 @@ export const questions = [
     prompt: "Kada se provodi puštanje u pogon?",
     answers: [
       "Nakon što su rezultati testiranja pozitivni.",
-      "Prije analize zahtjeva ako korisnik trazi prototip.",
-      "Prije integracije modula kako bi se ubrzao projekt.",
-      "Tijekom svakog Product Backlog Refinementa.",
+      "Nakon implementacije jedinica, ali prije integracije u cjelovit sustav.",
+      "Nakon analize zahtjeva, čim je dokument zahtjeva prihvaćen.",
+      "Nakon dizajna sustava, prije pisanja programskog koda.",
     ],
     correct: 0,
     explanation: "Puštanje u pogon dolazi nakon uspjesnog testiranja.",
@@ -287,8 +493,8 @@ export const questions = [
     answers: [
       "Održavanje.",
       "Dizajn sustava.",
-      "Analiza zahtjeva.",
-      "Sprint Planning.",
+      "Integracija i završno testiranje.",
+      "Integracija i testiranje sustava.",
     ],
     correct: 0,
     explanation: "Održavanje počinje nakon isporuke ili puštanja sustava u uporabu.",
@@ -338,9 +544,9 @@ export const questions = [
     prompt: "Koja je prednost metode vodopada?",
     answers: [
       "Faze su jasno definirane i lako ih je pratiti.",
-      "Promjene zahtjeva se uvode bez troska u bilo kojoj fazi.",
-      "Testiranje je kontinuirano tijekom cijelog razvoja.",
-      "Nema potrebe za dokumentacijom jer je tim samoorganiziran.",
+      "Promjene zahtjeva se mogu uvoditi, ali samo ako ne mijenjaju već završene faze.",
+      "Testiranje je jednostavnije jer se planira nakon što su prethodne faze jasno završene.",
+      "Dokumentacija je manja jer se većina znanja prenosi kroz svakodnevnu komunikaciju.",
     ],
     correct: 0,
     explanation: "Jedna od prednosti vodopada je preglednost i jasno definirane faze.",
@@ -351,9 +557,9 @@ export const questions = [
     prompt: "Koji je važan nedostatak metode vodopada?",
     answers: [
       "Promjene je teško uvoditi kada projekt odmakne.",
-      "Zahtjevi su potpuno nevidljivi do kraja projekta.",
-      "Metoda nema redoslijed faza.",
-      "Testiranje počinje prije definiranja zahtjeva.",
+      "Promjene je lako uvoditi, ali samo ako se dodaju nakon puštanja u pogon.",
+      "Zahtjevi se definiraju rano, pa kasne promjene mogu poremetiti već završene faze.",
+      "Testiranje dolazi nakon implementacije, pa se dio problema može otkriti relativno kasno.",
     ],
     correct: 0,
     explanation: "Vodopad je slabije prilagodljiv promjenama.",
@@ -364,9 +570,9 @@ export const questions = [
     prompt: "Zašto vodopad nije prikladan za kompleksne i dugotrajne projekte?",
     answers: [
       "Zato što je slabo fleksibilan i teško prihvaca naknadne promjene zahtjeva.",
-      "Zato što nema definirane faze pa se razvoj ne može pratiti.",
-      "Zato što ne koristi nikakvu dokumentaciju tijekom razvoja.",
-      "Zato što zahtijeva da se proizvod isporucuje nakon svakog dnevnog sastanka.",
+      "Zato što zahtijeva stabilne zahtjeve, a kod dugih projekata zahtjevi se često mijenjaju.",
+      "Zato što se problemi mogu kasno pojaviti ako se stvarna provjera dogodi tek nakon više faza.",
+      "Zato što jasne faze smanjuju fleksibilnost kada se projektni kontekst promijeni.",
     ],
     correct: 0,
     explanation: "Kod dugih i kompleksnih projekata zahtjevi se cesce mijenjaju, a vodopad na to slabo reagira.",
@@ -377,9 +583,9 @@ export const questions = [
     prompt: "Što najbolje opisuje agilne metode?",
     answers: [
       "Fleksibilan i iterativan pristup koji naglasava korisnika, suradnju i prilagodbu.",
-      "Linearan pristup u kojem se promjene zahtjeva izbjegavaju nakon početka razvoja.",
-      "Skup alata za automatsko generiranje dokumentacije iz komentara u kodu.",
-      "Metoda održavanja kojom se sprječavaju buduće greške.",
+      "Pristup u kojem se razvoj dijeli na kraće cikluse, ali se promjene prihvaćaju samo na početku projekta.",
+      "Pristup u kojem korisnik daje povratne informacije, ali tek nakon završne isporuke.",
+      "Pristup u kojem je dokumentacija važnija od ranog dobivanja funkcionalnog softvera.",
     ],
     correct: 0,
     explanation: "Agilne metode u prvi plan stavljaju korisnika, fleksibilnost i ceste prilagodbe.",
@@ -390,9 +596,9 @@ export const questions = [
     prompt: "Zašto agilne metode omogucuju ranije otkrivanje grešaka?",
     answers: [
       "Zbog čestih provjera, testiranja i prilagodbi tijekom razvoja.",
-      "Zato što se testiranje radi tek nakon puštanja u pogon.",
-      "Zato što korisnik nije uključen dok proizvod nije gotov.",
-      "Zato što se dokumentacija piše umjesto testiranja.",
+      "Zato što se veći dio testiranja planira tek na kraju, ali su zahtjevi detaljnije opisani.",
+      "Zato što se korisnik uključuje povremeno, uglavnom radi potvrde završne verzije.",
+      "Zato što se greške dokumentiraju ranije, iako se ispravljaju tek nakon završetka ciklusa.",
     ],
     correct: 0,
     explanation: "Česta testiranja i povratne informacije smanjuju rizik kasnog otkrivanja problema.",
@@ -403,9 +609,9 @@ export const questions = [
     prompt: "Što je Agilni manifest?",
     answers: [
       "Skup temeljnih vrijednosti i principa na kojima se temelji agilni razvoj.",
-      "Popis svih zadataka koje razvojni tim planira izvršiti u sprintu.",
-      "Grafikon koji prikazuje smanjenje preostalog posla kroz vrijeme.",
-      "Dokument koji opisuje hardverske komponente sustava.",
+      "Skup konkretnih Scrum pravila koja propisuju sve uloge, događaje i artefakte.",
+      "Popis preporučenih tehnika za planiranje ciklusa i praćenje rada tima.",
+      "Dokument koji detaljno propisuje kako se mora voditi svaki agilni projekt.",
     ],
     correct: 0,
     explanation: "Agilni manifest daje osnovni način razmisljanja za agilni razvoj.",
@@ -429,9 +635,9 @@ export const questions = [
     prompt: "Što Agilni manifest stavlja ispred opsezne dokumentacije?",
     answers: [
       "Funkcionalan softver.",
-      "Formalni ugovor.",
-      "Plan testiranja.",
-      "Arhitekturu sustava.",
+      "Detaljno razrađenu specifikaciju bez isporučenog proizvoda.",
+      "Dokumentaciju koja je dovoljna samo ako zamjenjuje demonstraciju proizvoda.",
+      "Potpuni plan razvoja koji se ne mijenja tijekom iteracija.",
     ],
     correct: 0,
     explanation: "Jedna od vrijednosti manifesta je funkcionalan softver ispred opsezne dokumentacije.",
@@ -442,9 +648,9 @@ export const questions = [
     prompt: "Koji je odnos agilnih metoda prema promjenama?",
     answers: [
       "Promjene se prihvacaju i na njih se nastoji brzo reagirati.",
-      "Promjene se blokiraju nakon analize zahtjeva.",
-      "Promjene su dopustene samo nakon puštanja u pogon.",
-      "Promjene su zamjena za testiranje i dokumentaciju.",
+      "Promjene se prihvaćaju, ali samo između velikih projektnih faza.",
+      "Promjene se toleriraju ako ne utječu na već dogovoreni plan isporuke.",
+      "Promjene se bilježe tijekom razvoja, ali se u pravilu implementiraju tek u idućem projektu.",
     ],
     correct: 0,
     explanation: "Agilni pristup daje prednost odgovoru na promjene pred krutim praćenjem plana.",
@@ -468,9 +674,9 @@ export const questions = [
     prompt: "Koja je uloga korisnika u agilnom razvoju prema bilješkama?",
     answers: [
       "Korisnik je uključen tijekom cijelog razvojnog ciklusa.",
-      "Korisnik se uključuje tek nakon puštanja proizvoda u pogon.",
-      "Korisnik smije dati zahtjeve samo prije početka dizajna sustava.",
-      "Korisnik sudjeluje samo u pisanju dokumentacije koda.",
+      "Korisnik je uključen uglavnom na početku, kako bi se zahtjevi mogli zaključati.",
+      "Korisnik se uključuje nakon svake veće faze, ali ne tijekom same implementacije.",
+      "Korisnik daje povratne informacije, ali ih tim razmatra tek nakon završne isporuke.",
     ],
     correct: 0,
     explanation: "Agilne metode u prvi plan stavljaju korisnika i stalnu suradnju s njim.",
@@ -481,9 +687,9 @@ export const questions = [
     prompt: "Što je Scrum?",
     answers: [
       "Razvojni okvir za rješavanje slozenih i dinamicnih problema.",
-      "Tehnika testiranja jedinica u metodi vodopada.",
-      "Generator dokumentacije za programski jezik Java.",
-      "Metoda bez uloga, događaja, artefakata i pravila.",
+      "Agilna metoda koja propisuje kontinuirani tok bez sprintova i zadanih uloga.",
+      "Linearni model razvoja u kojem se faze završavaju jedna za drugom.",
+      "Skup praksi za organizaciju rada bez formalnih događaja i artefakata.",
     ],
     correct: 0,
     explanation: "Scrum je razvojni okvir, a ne samo tehnika ili postupak.",
@@ -494,9 +700,9 @@ export const questions = [
     prompt: "Koja tvrdnja o nazivu Scrum je tocna?",
     answers: [
       "Naziv dolazi iz ragbija i naglasava timski rad.",
-      "Naziv je kratica za softverski ciklus upravljanja rizikom.",
-      "Naziv oznacava dokumentaciju procesa u agilnim projektima.",
-      "Naziv se prvi put javlja kao Java alat za dokumentaciju.",
+      "Naziv dolazi iz sportskog konteksta, ali u Scrumu primarno označava formalni sastanak.",
+      "Naziv se koristi zato što opisuje rad u kratkim ciklusima s potpuno fiksnim zadacima.",
+      "Naziv označava tehniku kojom vlasnik proizvoda samostalno raspoređuje posao timu.",
     ],
     correct: 0,
     explanation: "U bilješkama Scrum dolazi iz ragbija i naglasava timski rad.",
@@ -520,9 +726,9 @@ export const questions = [
     prompt: "Od cega se Scrum sastoji?",
     answers: [
       "Od uloga, događaja, artefakata i pravila.",
-      "Od faza analize, dizajna, implementacije i održavanja.",
-      "Od Kanban kartica, Kanban stupaca i WIP ograničenja.",
-      "Od dokumenta zahtjeva, plana testiranja i JavaDoc tagova.",
+      "Od sprintova, Product Backloga i Daily Scruma, ali bez posebnih uloga.",
+      "Od uloga i događaja, dok se artefakti definiraju tek ako ih tim sam uvede.",
+      "Od vlasnika proizvoda, razvojnog tima i plana isporuke, ali bez formalnih pravila.",
     ],
     correct: 0,
     explanation: "Bilješke navode četiri osnovna dijela Scruma: uloge, događaji, artefakti i pravila.",
@@ -533,9 +739,9 @@ export const questions = [
     prompt: "Kakav je Scrum tim prema bilješkama?",
     answers: [
       "Mali, samostalan, fleksibilan i prilagodljiv.",
-      "Velik, hijerarhijski i strogo specijaliziran.",
-      "Bez odgovornosti i bez definiranih uloga.",
-      "Sastavljen isključivo od krajnjih korisnika.",
+      "Mali i fleksibilan, ali s voditeljem koji svakodnevno dodjeljuje zadatke članovima.",
+      "Samostalan, ali bez jasne odgovornosti za rezultat sprinta.",
+      "Prilagodljiv, ali uglavnom organiziran oko odvojenih specijaliziranih podtimova.",
     ],
     correct: 0,
     explanation: "Bit Scruma je u malom timu koji može samostalno raditi i prilagođavati se.",
@@ -546,9 +752,9 @@ export const questions = [
     prompt: "Što znači da Scrum koristi preklapajući model rada?",
     answers: [
       "Da se kroz cijeli tok projekta pomalo radi na više stvari.",
-      "Da se faze moraju strogo završavati jedna prije druge.",
-      "Da se svi zadaci rade tek nakon potpunog završetka dokumentacije.",
-      "Da se proizvod isporucuje samo nakon završne integracije sustava.",
+      "Da se zahtjevi, dizajn i implementacija mogu djelomično nadovezivati unutar iterativnog rada.",
+      "Da tim radi paralelno na više stavki, ali bez zajedničkog cilja ciklusa.",
+      "Da se faze formalno preklapaju, ali se rezultat provjerava tek na kraju projekta.",
     ],
     correct: 0,
     explanation: "Bilješke opisuju Scrum kao model u kojem se kroz tok razvoja radi pomalo na više stvari.",
@@ -559,9 +765,9 @@ export const questions = [
     prompt: "Koja tvrdnja najbolje opisuje tezinu Scruma prema bilješkama?",
     answers: [
       "Jednostavan je za razumjeti, ali tezak za savladati.",
-      "Tezak je za razumjeti, ali ne zahtijeva praksu.",
-      "Jednostavan je zato što nema uloge, događaje ni pravila.",
-      "Tezak je isključivo zbog potrebe za hardverskim komponentama.",
+      "Jednostavan je za razumjeti jer ima malo elemenata, ali zahtijeva disciplinu u primjeni.",
+      "Težak je za savladati zato što se njegove uloge i događaji stalno mijenjaju.",
+      "Jednostavan je za primjenu čim tim formalno uvede sprintove i Daily Scrum.",
     ],
     correct: 0,
     explanation: "Scrum ima jednostavnu osnovnu strukturu, ali kvalitetna primjena nije trivijalna.",
@@ -572,9 +778,9 @@ export const questions = [
     prompt: "Koje su tri uloge u Scrum timu?",
     answers: [
       "Scrum Master, vlasnik proizvoda i razvojni tim.",
-      "Tester, arhitekt i sistemski administrator.",
-      "Vlasnik proizvoda, krajnji korisnik i dokumentarist.",
-      "Projektni sponzor, voditelj prodaje i analiticar tržišta.",
+      "Scrum Master, vlasnik proizvoda i krajnji korisnici.",
+      "Vlasnik proizvoda, voditelj projekta i razvojni tim.",
+      "Scrum Master, razvojni tim i predstavnici drugih Scrum timova.",
     ],
     correct: 0,
     explanation: "Scrum Team cine Scrum Master, vlasnik proizvoda i razvojni tim.",
@@ -586,8 +792,8 @@ export const questions = [
     answers: [
       "Osigurati pravilno i neometano odvijanje Scrum procesa.",
       "Odrediti poslovnu viziju i redoslijed svih stavki proizvoda.",
-      "Samostalno napisati sav kod i testirati sve jedinice.",
-      "Odobriti puštanje proizvoda na tržište umjesto vlasnika proizvoda.",
+      "Dodjeljivati zadatke članovima razvojnog tima tijekom svakog sprinta.",
+      "Donositi konačne odluke o tome koje funkcionalnosti ulaze u proizvod.",
     ],
     correct: 0,
     explanation: "Scrum Master vodi proces, uklanja prepreke i pomaze timu.",
@@ -599,8 +805,8 @@ export const questions = [
     answers: [
       "Prati napredak tima i cini ga vidljivim svima uključenima u projekt.",
       "Samostalno određuje poslovne zahtjeve i redoslijed implementacije.",
-      "Donosi završnu odluku zadovoljava li proizvod potrebnu kvalitetu.",
-      "Piše korisničku dokumentaciju namijenjenu krajnjim korisnicima.",
+      "Preuzima tehničko planiranje zadataka umjesto razvojnog tima.",
+      "Odobrava kada se proizvod smije pustiti na tržište.",
     ],
     correct: 0,
     explanation: "Scrum Master brine o procesu, produktivnosti, uklanjanju prepreka i vidljivosti napretka.",
@@ -612,8 +818,8 @@ export const questions = [
     answers: [
       "Određuje zahtjeve, ključne značajke i redoslijed implementacije.",
       "Brine se da dnevni sastanak traje točno 15 minuta.",
-      "Određuje WIP ograničenja na Kanban ploci.",
-      "Generira HTML dokumentaciju iz komentara u kodu.",
+      "Odlučuje kako će razvojni tim tehnički razlomiti posao na zadatke.",
+      "Uklanja procesne prepreke i pazi da se Scrum pravilno provodi.",
     ],
     correct: 0,
     explanation: "Vlasnik proizvoda odgovara za viziju, zahtjeve i prioritete proizvoda.",
@@ -625,8 +831,8 @@ export const questions = [
     answers: [
       "Kada nastaviti razvoj, a kada proizvod pustiti na tržište.",
       "Kako će razvojni tim tehnički podijeliti posao na manje zadatke.",
-      "Koji će predstavnik ici na Scrum of Scrums sastanak.",
-      "Kako će se generirati JavaDoc dokumentacija iz komentara.",
+      "Kako će Scrum Master ukloniti prepreke tijekom sprinta.",
+      "Koji će član razvojnog tima implementirati svaku pojedinu stavku.",
     ],
     correct: 0,
     explanation: "Vlasnik proizvoda odgovoran je za viziju i odluke o razvoju i pustanju proizvoda.",
@@ -637,9 +843,9 @@ export const questions = [
     prompt: "Koja tvrdnja najbolje opisuje razvojni tim u Scrumu?",
     answers: [
       "Samostalno odlučuje kako podijeliti posao na manje zadatke.",
-      "Ceka da vlasnik proizvoda detaljno dodijeli svaki zadatak svakom članu.",
-      "Sudjeluje samo u dokumentiranju završenog proizvoda.",
-      "Sastoji se od predstavnika više Scrum timova.",
+      "Odlučuje što je poslovno najvažnije za proizvod i kojim redoslijedom se radi.",
+      "Prati Scrum proces i uklanja prepreke umjesto da razvija inkrement.",
+      "Prima od vlasnika proizvoda detaljan tehnički raspored rada po članovima.",
     ],
     correct: 0,
     explanation: "Razvojni tim je samoorganizirajuci i odlučuje kako će razraditi posao.",
@@ -650,9 +856,9 @@ export const questions = [
     prompt: "Koja je preporucena velicina Scrum razvojnog tima?",
     answers: [
       "Od 3 do 9 članova, često oko 7.",
-      "Od 1 do 2 člana, kako bi komunikacija bila minimalna.",
-      "Najmanje 20 članova zbog raspodjele specijalizacija.",
-      "Tocno 15 članova, jer Daily Scrum traje 15 minuta.",
+      "Od 3 do 9 članova, ali samo ako svaki član ima jednu usku specijalizaciju.",
+      "Oko 7 članova, ali bez ograničenja ako tim ima dobrog Scrum Mastera.",
+      "Najmanje 10 članova, jer se uloge moraju jasno podijeliti po specijalizacijama.",
     ],
     correct: 0,
     explanation: "Prevelik tim otezava komunikaciju, a premalen može smanjiti produktivnost.",
@@ -663,9 +869,9 @@ export const questions = [
     prompt: "Što su Scrum artefakti u kontekstu bilješki?",
     answers: [
       "Konkretni radni elementi koji omogucuju transparentnost, uvid i prilagodbu.",
-      "Formalne uloge koje određuju tko vodi projekt i tko piše kod.",
-      "Sastanci koji se održavaju na početku i kraju svakog sprinta.",
-      "Vrste održavanja nakon puštanja softvera u pogon.",
+      "Elementi Scruma koji prikazuju stanje rada, ali ne služe za prilagodbu procesa.",
+      "Dokumenti koji se izrađuju samo na početku projekta i kasnije se ne mijenjaju.",
+      "Sastanci na kojima tim provjerava rad, ali bez konkretnih radnih zapisa.",
     ],
     correct: 0,
     explanation: "Artefakti su elementi poput Product Backloga, Sprint Backloga, inkrementa i grafikona.",
@@ -676,9 +882,9 @@ export const questions = [
     prompt: "Zašto su Scrum artefakti dinamicki?",
     answers: [
       "Zato što se mogu mijenjati kada se promijene zahtjevi, tržište ili tehnologija.",
-      "Zato što uvijek ostaju isti od početka do kraja projekta.",
-      "Zato što ih može mijenjati samo Scrum Master tijekom Daily Scruma.",
-      "Zato što služe isključivo za arhiviranje završenog proizvoda.",
+      "Zato što ih razvojni tim ažurira samo nakon završetka svih sprintova.",
+      "Zato što ih Scrum Master mijenja neovisno o zahtjevima i tržištu.",
+      "Zato što se koriste za praćenje rada, ali se njihov sadržaj ne smije prilagođavati.",
     ],
     correct: 0,
     explanation: "Artefakti prate stvarno stanje rada i mijenjaju se kako se mijenja kontekst projekta.",
@@ -689,9 +895,9 @@ export const questions = [
     prompt: "Što definira vizija proizvoda?",
     answers: [
       "Dugorocni cilj proizvoda ili projekta.",
-      "Dnevni plan rada razvojnog tima.",
-      "Popis grešaka nakon integracijskog testiranja.",
-      "Maksimalan broj zadataka u WIP stupcu.",
+      "Cilj jednog sprinta koji se ostvaruje kroz odabrane stavke.",
+      "Popis odabranih stavki za jedan sprint.",
+      "Kriterij prema kojem se stavka smatra završenom.",
     ],
     correct: 0,
     explanation: "Vizija proizvoda treba biti jasna, kratka i precizna.",
@@ -703,8 +909,8 @@ export const questions = [
     answers: [
       "Cilj koji se treba postici tijekom jednog sprinta implementacijom odabranih stavki.",
       "Dugorocna poslovna vizija cijelog proizvoda za sve buduće verzije.",
-      "Popis svih pitanja koja krajnji korisnik ima o proizvodu.",
-      "Grafikon koji prikazuje smanjenje preostalog posla kroz vrijeme.",
+      "Ukupan popis svih stavki koje bi proizvod jednog dana mogao sadržavati.",
+      "Kriterij koji definira kada se pojedina stavka smatra gotovom.",
     ],
     correct: 0,
     explanation: "Cilj ciklusa usmjerava rad jednog sprinta.",
@@ -715,9 +921,9 @@ export const questions = [
     prompt: "Na koje pitanje odgovara Product Backlog?",
     answers: [
       "Što je sljedeće najvažnije za izraditi?",
-      "Je li sustav spreman za stvarnu uporabu?",
-      "Kako će sustav biti strukturiran i izveden?",
-      "Što je tim radio od prošlog Scrum of Scrums sastanka?",
+      "Koje odabrane stavke razvojni tim planira završiti u ovom sprintu?",
+      "Koji je minimalni kriterij da se stavka smatra dovršenom?",
+      "Koliko je rada preostalo kroz vrijeme unutar trenutnog ciklusa?",
     ],
     correct: 0,
     explanation: "Product Backlog je prioritetni popis svega potrebnog za proizvod.",
@@ -728,9 +934,9 @@ export const questions = [
     prompt: "Tko je odgovoran za sadržaj, dostupnost i redoslijed stavki Product Backloga?",
     answers: [
       "Vlasnik proizvoda.",
-      "Scrum Master.",
-      "Razvojni tim.",
-      "Krajnji korisnik bez tima.",
+      "Razvojni tim, jer on odlučuje koje stavke imaju najveću poslovnu vrijednost.",
+      "Scrum Master, jer on održava redoslijed stavki i uklanja prepreke.",
+      "Cijeli Scrum tim jednako, bez jedne osobe odgovorne za prioritet.",
     ],
     correct: 0,
     explanation: "Product Owner upravlja prioritetima i sadržajem Product Backloga.",
@@ -741,9 +947,9 @@ export const questions = [
     prompt: "Što je Product Backlog Refinement?",
     answers: [
       "Neprekidno dodavanje detalja, procjena i redoslijeda stavkama Product Backloga.",
-      "Završni sastanak na kojem se demonstrira inkrement korisniku.",
-      "Grafikon koji se svodi na nulu kad se zadaci završe.",
-      "Formalna odluka o pustanju proizvoda na tržište.",
+      "Planiranje sprinta u kojem se iz Product Backloga biraju stavke za trenutni ciklus.",
+      "Pregled inkrementa na kraju sprinta radi prilagodbe Product Backloga.",
+      "Dnevno ažuriranje preostalog rada kako bi se vidio napredak sprinta.",
     ],
     correct: 0,
     explanation: "Refinement poboljšava i razjasnjava Product Backlog tijekom vremena.",
@@ -755,8 +961,8 @@ export const questions = [
     answers: [
       "Plan razvojnog tima za jedan ciklus s odabranim stavkama i planom realizacije.",
       "Dugorocna vizija proizvoda i poslovna svrha projekta.",
-      "Popis svih korisničih pitanja za online dokumentaciju.",
-      "Skup završenih inkremenata svih prethodnih ciklusa.",
+      "Ukupan prioritetni popis svih stavki koje proizvod može trebati.",
+      "Kriterij kvalitete koji određuje kada je stavka završena.",
     ],
     correct: 0,
     explanation: "Sprint Backlog pripada razvojnom timu i pokazuje što se radi u sprintu.",
@@ -768,8 +974,8 @@ export const questions = [
     answers: [
       "Isključivo razvojnom timu.",
       "Isključivo vlasniku proizvoda.",
-      "Krajnjim korisnicima i sistemskim administratorima.",
-      "Predstavnicima svih timova na Scrum of Scrums sastanku.",
+      "Cijelom Scrum timu, ali ga vlasnik proizvoda mijenja bez razvojnog tima.",
+      "Scrum Masteru, jer on raspoređuje zadatke članovima tima.",
     ],
     correct: 0,
     explanation: "Bilješke navode da je Sprint Backlog plan i vlasnistvo razvojnog tima.",
@@ -780,9 +986,9 @@ export const questions = [
     prompt: "Što je inkrement?",
     answers: [
       "Zbroj dovrsenih stavki iz ciklusa koji mora biti upotrebljiv i gotov.",
-      "Sastanak na kojem se određuje cilj sprinta.",
-      "Prioritetni popis svih buducih funkcionalnosti.",
-      "Sustavska dokumentacija namijenjena developerima.",
+      "Plan odabranih stavki koje razvojni tim tek namjerava napraviti u sprintu.",
+      "Popis svih funkcionalnosti proizvoda poredan po poslovnoj vrijednosti.",
+      "Dogovoreni kriterij prema kojem se provjerava je li stavka završena.",
     ],
     correct: 0,
     explanation: "Inkrement je radni rezultat koji na kraju sprinta mora biti gotov.",
@@ -794,8 +1000,8 @@ export const questions = [
     answers: [
       "Određuje kada se nesto smatra završenim i koju kvalitetu mora zadovoljiti.",
       "Određuje koliko će trajati Daily Scrum.",
-      "Zamjenjuje Product Backlog u timovima s više članova.",
-      "Opisuje hardverske komponente potrebne za sustav.",
+      "Opisuje cilj koji razvojni tim želi postići u jednom sprintu.",
+      "Poredava sve buduće stavke proizvoda po poslovnoj vrijednosti.",
     ],
     correct: 0,
     explanation: "Definicija gotovog daje zajednicki kriterij završenosti i kvalitete.",
@@ -806,9 +1012,9 @@ export const questions = [
     prompt: "Što prikazuje Burn-down grafikon?",
     answers: [
       "Napredak kroz vrijeme i smanjenje preostalog posla.",
-      "Uloge Scrum Mastera, vlasnika proizvoda i tima.",
-      "Arhitekturne odluke i odnose modula.",
-      "Usporedbu sistemske i korisničke dokumentacije.",
+      "Popis stavki koje vlasnik proizvoda tek treba prioritetizirati.",
+      "Kriterije po kojima tim odlučuje je li stavka završena.",
+      "Plan stavki koje razvojni tim preuzima za trenutni sprint.",
     ],
     correct: 0,
     explanation: "Burn-down grafikon je vizualni prikaz preostalog posla kroz vrijeme.",
@@ -819,9 +1025,9 @@ export const questions = [
     prompt: "Čemu služe događaji u Scrumu?",
     answers: [
       "Redovitosti rada, kontroli, prilagodbi i transparentnosti.",
-      "Zamjeni svih artefakata u projektu.",
-      "Ukidanju potrebe za komunikacijom u timu.",
-      "Definiranju hardverskih komponenti sustava.",
+      "Redovitosti rada, ali bez potrebe za formalnom kontrolom i prilagodbom.",
+      "Usklađivanju tima samo na početku i kraju projekta.",
+      "Zamjeni artefakata kada tim ne želi voditi Product Backlog.",
     ],
     correct: 0,
     explanation: "Događaji su formalne prilike za kontrolu i prilagodbu.",
@@ -832,9 +1038,9 @@ export const questions = [
     prompt: "Što se događa ako se Scrum događaji preskaču?",
     answers: [
       "Smanjuju se transparentnost, kontrola i mogućnost prilagodbe.",
-      "Automatski se povećava produktivnost razvojnog tima.",
-      "Product Backlog postaje odgovornost Scrum Mastera.",
-      "Sprint se produljuje na više od četiri tjedna.",
+      "Tim i dalje radi, ali gubi redovite prilike za inspekciju i prilagodbu.",
+      "Sprint može završiti, ali se teže otkrivaju problemi u toku rada.",
+      "Artefakti ostaju isti, ali se smanjuje potreba za komunikacijom u timu.",
     ],
     correct: 0,
     explanation: "Događaji postoje kako bi tim redovito kontrolirao i prilagođavao rad.",
@@ -859,8 +1065,8 @@ export const questions = [
     answers: [
       "Vremenski ograničen ciklus rada i srce Scruma.",
       "Popis svih stavki proizvoda poredan po prioritetu.",
-      "Dokumentacija procesa razvoja proizvoda.",
-      "Sastanak predstavnika više Scrum timova.",
+      "Sastanak na kojem se dogovara što će se raditi u sljedećem ciklusu.",
+      "Rezultat završenog rada koji mora biti upotrebljiv na kraju ciklusa.",
     ],
     correct: 0,
     explanation: "Sprint je osnovni ciklus u kojem se ostvaruje cilj i stvara rezultat.",
@@ -871,9 +1077,9 @@ export const questions = [
     prompt: "Koliko obično traje sprint prema bilješkama?",
     answers: [
       "Od 2 do 4 tjedna.",
-      "15 minuta.",
-      "Jedan dan.",
-      "Od 6 do 12 mjeseci.",
+      "Do mjesec dana, ali najčešće kao kraći vremenski ograničen ciklus.",
+      "Jedan radni dan, jer se plan provjerava na Daily Scrumu.",
+      "Od 6 do 12 mjeseci, ako je projekt dovoljno složen.",
     ],
     correct: 0,
     explanation: "Bilješke navode da sprint traje 2 do 4 tjedna.",
@@ -884,9 +1090,9 @@ export const questions = [
     prompt: "Tko može otkazati sprint prije isteka predviđenog vremena?",
     answers: [
       "Samo vlasnik proizvoda.",
-      "Bilo koji član razvojnog tima.",
-      "Samo krajnji korisnik.",
-      "Predstavnik Kanban tima.",
+      "Scrum Master, ako procijeni da tim neće završiti sve stavke.",
+      "Razvojni tim, ako zaključi da je Sprint Backlog prevelik.",
+      "Cijeli Scrum tim zajedničkim dogovorom bez posebne odgovornosti vlasnika.",
     ],
     correct: 0,
     explanation: "Bilješke navode da je za otkazivanje sprinta ovlasten samo vlasnik proizvoda.",
@@ -898,8 +1104,8 @@ export const questions = [
     answers: [
       "Cilj sprinta i Sprint Backlog.",
       "Prilagodjeni Product Backlog nakon demonstracije.",
-      "Popis krivih odgovora nakon kviza.",
-      "Dokument arhitekture softvera.",
+      "Inkrement i odluka o puštanju proizvoda na tržište.",
+      "Popis prepreka iz Daily Scruma i plan njihovog uklanjanja.",
     ],
     correct: 0,
     explanation: "Planiranje ciklusa završava dogovorom o cilju sprinta i Sprint Backlogu.",
@@ -911,8 +1117,8 @@ export const questions = [
     answers: [
       "Svi članovi Scrum tima.",
       "Samo Scrum Master.",
-      "Samo vlasnik proizvoda i krajnji korisnici.",
-      "Samo predstavnici više Scrum timova.",
+      "Vlasnik proizvoda i razvojni tim, dok Scrum Master sudjeluje samo ako postoji problem.",
+      "Razvojni tim, dok vlasnik proizvoda samo naknadno potvrđuje odabrane stavke.",
     ],
     correct: 0,
     explanation: "Planiranje sprinta uključuje cijeli Scrum tim.",
@@ -923,9 +1129,9 @@ export const questions = [
     prompt: "Koja tri pitanja se postavljaju na Daily Scrumu?",
     answers: [
       "Što sam radio jucer, što cu raditi danas, postoje li prepreke?",
-      "Što je dugorocni cilj, koji je budzet, tko odobrava tržište?",
-      "Koji su hardverski zahtjevi, koji je OS, koji je server?",
-      "Koji testovi nisu uspjeli, tko ih piše, koji alat generira izvještaj?",
+      "Što je cilj sprinta, koje stavke ulaze u sprint, tko ih odobrava?",
+      "Što je završeno u inkrementu, što treba pokazati korisniku, što mijenjamo u Backlogu?",
+      "Što je dobro funkcioniralo, što nije, što ćemo poboljšati u sljedećem sprintu?",
     ],
     correct: 0,
     explanation: "Daily Scrum služi brzom dnevnom usklađivanju tima.",
@@ -938,7 +1144,7 @@ export const questions = [
       "Detaljno rješavati probleme tijekom sastanka.",
       "Poboljsati komunikaciju u razvojnom timu.",
       "Prepoznati prepreke u radu.",
-      "Uskladiti rad za taj dan.",
+      "Brzo uskladiti plan rada za taj dan.",
     ],
     correct: 0,
     explanation: "Problemi se mogu raspraviti nakon formalnog dijela, ali Daily Scrum nije sastanak za njihovo detaljno rješavanje.",
@@ -950,8 +1156,8 @@ export const questions = [
     answers: [
       "Pregledati inkrement i po potrebi prilagoditi Product Backlog.",
       "Analizirati rad tima i dogovoriti poboljšanja procesa.",
-      "Svakodnevno odgovoriti na tri pitanja o radu.",
-      "Ograniciti broj kartica u Kanban stupcu.",
+      "Odabrati stavke koje će razvojni tim preuzeti u idući sprint.",
+      "Procijeniti preostali rad i ažurirati Burn-down grafikon.",
     ],
     correct: 0,
     explanation: "Sprint Review se bavi pregledom rezultata sprinta i Product Backlogom.",
@@ -963,8 +1169,8 @@ export const questions = [
     answers: [
       "Osobe koje pozove vlasnik proizvoda, primjerice dionici i krajnji korisnici.",
       "Samo Scrum Master, bez vlasnika proizvoda i razvojnog tima.",
-      "Samo predstavnici drugih Scrum timova.",
-      "Samo sistemski administratori koji pisu korisničku dokumentaciju.",
+      "Samo razvojni tim, jer se inkrement ne pokazuje izvan tima.",
+      "Samo vlasnik proizvoda i Scrum Master, jer razvojni tim tada ne sudjeluje.",
     ],
     correct: 0,
     explanation: "Sprint Review može uključiti dionike i korisnike koje pozove vlasnik proizvoda.",
@@ -976,8 +1182,8 @@ export const questions = [
     answers: [
       "Analizirati rad tima i dogovoriti poboljšanja za iduci sprint.",
       "Odabrati stavke Product Backloga za trenutni sprint.",
-      "Prikazati smanjenje preostalog posla kroz vrijeme.",
-      "Usporediti Scrum i Kanban u tablici.",
+      "Pregledati gotov inkrement s dionicima i prilagoditi Product Backlog.",
+      "Svaki dan uskladiti što je napravljeno, što slijedi i postoje li prepreke.",
     ],
     correct: 0,
     explanation: "Retrospektiva je usmjerena na poboljšanje načina rada tima.",
@@ -988,9 +1194,9 @@ export const questions = [
     prompt: "Kada se održava Sprint Retrospective?",
     answers: [
       "Nakon pregleda ciklusa, a prije planiranja sljedećeg sprinta.",
-      "Prije svakog Daily Scruma.",
-      "Samo nakon puštanja proizvoda na tržište.",
-      "Tijekom faze dizajna sustava u metodi vodopada.",
+      "Na početku sprinta, odmah nakon što se odabere Sprint Backlog.",
+      "Tijekom Sprint Reviewa, kao dio demonstracije inkrementa dionicima.",
+      "Svaki dan nakon Daily Scruma, ako postoje prepreke u radu.",
     ],
     correct: 0,
     explanation: "Retrospektiva zaključuje sprint s naglaskom na poboljšanje rada za sljedeći sprint.",
@@ -1001,9 +1207,9 @@ export const questions = [
     prompt: "Što znači riječ Kanban?",
     answers: [
       "Vidljiva kartica.",
-      "Gotov inkrement.",
-      "Dnevni sastanak.",
-      "Dokument zahtjeva.",
+      "Radna kartica.",
+      "Signalna ploča.",
+      "Kartica toka.",
     ],
     correct: 0,
     explanation: "Kanban dolazi iz japanskog i doslovno znači vidljiva kartica.",
@@ -1014,9 +1220,9 @@ export const questions = [
     prompt: "Gdje i kada je razvijen Kanban prema bilješkama?",
     answers: [
       "U Toyoti 1940-ih godina.",
-      "U Utahu 2001. godine.",
-      "U radu Winstona Roycea 1970. godine.",
-      "U Java dokumentaciji 1997. godine.",
+      "U japanskoj proizvodnji, ali tek kao softverska agilna metoda 2001. godine.",
+      "U proizvodnom okruženju nakon razvoja Scruma, kao odgovor na sprintove.",
+      "U Toyoti 1970-ih, paralelno s prvim opisom metode vodopada.",
     ],
     correct: 0,
     explanation: "Bilješke povezuju Kanban s Toyotom i proizvodnjom upravo na vrijeme.",
@@ -1027,9 +1233,9 @@ export const questions = [
     prompt: "S kojom je proizvodnom idejom povezan Kanban?",
     answers: [
       "Upravo na vrijeme, odnosno Just in Time.",
-      "Definicija gotovog.",
-      "Sekvencijalni vodopad.",
-      "JavaDoc komentari.",
+      "Dugoročno planiranje velikih zaliha unaprijed.",
+      "Isporuka u fiksnim vremenskim kutijama bez promjene opsega.",
+      "Planiranje rada tako da se sav posao započne što ranije.",
     ],
     correct: 0,
     explanation: "Kanban je razvijen uz JIT pristup smanjenja nepotrebnog posla.",
@@ -1041,8 +1247,8 @@ export const questions = [
     answers: [
       "Vizualizirati tok rada i upravljati njime uz ograničenje rada u tijeku.",
       "Raditi u fiksnim sprintovima s jasno zadanim ulogama.",
-      "Završiti svu dokumentaciju prije prvog retka koda.",
-      "Testirati samo nakon integracije svih modula.",
+      "Vizualizirati rad, ali bez ograničenja količine posla koji je istovremeno otvoren.",
+      "Upravljati tokom tako da se novi zadaci započinju čim se pojave, bez čekanja kapaciteta.",
     ],
     correct: 0,
     explanation: "Kanban naglasava vizualizaciju rada, WIP ograničenja i glatki tok.",
@@ -1053,9 +1259,9 @@ export const questions = [
     prompt: "Koja recenica najbolje izrazava načelo koje dijele Scrum i Kanban u bilješkama?",
     answers: [
       "Prestani pocinjati, počni završavati.",
-      "Dokumentacija prije funkcionalnog softvera.",
-      "Što više paralelnog rada, to bolji tok.",
-      "Svaka faza mora završiti prije sljedeće.",
+      "Započni što više stavki kako bi se povećala iskorištenost tima.",
+      "Planiraj sve zadatke unaprijed kako bi se izbjegle promjene toka.",
+      "Završi planiranje prije nego se počne vizualizirati rad.",
     ],
     correct: 0,
     explanation: "Bilješke navode naglasak na završavanju zapocetog posla.",
@@ -1066,9 +1272,9 @@ export const questions = [
     prompt: "Što znači WIP u Kanbanu?",
     answers: [
       "Količina posla na kojem se trenutno radi.",
-      "Popis svih korisničih zahtjeva.",
-      "Definicija gotovog inkrementa.",
-      "Plan testiranja za cijeli sustav.",
+      "Ukupan broj zadataka koji čekaju u Product Backlogu.",
+      "Broj završenih zadataka u zadnjem ciklusu.",
+      "Maksimalan broj ljudi koji smije raditi u jednom stupcu.",
     ],
     correct: 0,
     explanation: "WIP je work in progrešs, odnosno rad u tijeku.",
@@ -1079,9 +1285,9 @@ export const questions = [
     prompt: "Zašto Kanban ogranicava WIP?",
     answers: [
       "Da se izbjegne preopterećenje, multitasking i zadržavanje posla.",
-      "Da se spriječi bilo kakva promjena prioriteta.",
-      "Da se sprintovi mogu zaključati na 2 do 4 tjedna.",
-      "Da se dokumentacija proizvoda automatski generira.",
+      "Da svi članovi tima imaju što više paralelnih zadataka u svakom trenutku.",
+      "Da se novi posao ne povlači dok postojeći posao nije dovoljno pomaknut kroz tok.",
+      "Da se prioriteti ne mogu promijeniti dok se ne završi cijeli projekt.",
     ],
     correct: 0,
     explanation: "Ogranicenje WIP-a pomaze fokusu, toku i produktivnosti.",
@@ -1092,9 +1298,9 @@ export const questions = [
     prompt: "Koje su tri glavne ideje Kanbana iz bilješki?",
     answers: [
       "Vizualizirati rad, ograniciti WIP i unaprijediti tok rada.",
-      "Planirati sprint, pregledati sprint i održati retrospektivu.",
-      "Analizirati zahtjeve, dizajnirati sustav i pustiti ga u pogon.",
-      "Napisati kod, generirati JavaDoc i objaviti dokumentaciju.",
+      "Vizualizirati rad, planirati sprint i pregledati inkrement.",
+      "Ograničiti WIP, definirati uloge i raditi u fiksnim ciklusima.",
+      "Unaprijediti tok rada, ali bez eksplicitnog ograničenja rada u tijeku.",
     ],
     correct: 0,
     explanation: "To su tri glavna načela Kanbana navedena u bilješkama.",
@@ -1105,9 +1311,9 @@ export const questions = [
     prompt: "Što je Kanban kartica?",
     answers: [
       "Vizualni prikaz jedne stavke posla i njezina statusa.",
-      "Uloga osobe koja određuje prioritete proizvoda.",
-      "Sastanak koji traje oko 15 minuta.",
-      "Dokument o arhitekturi sustava.",
+      "Stupac koji ograničava koliko posla smije biti u tijeku.",
+      "Pravilo kojim se određuje kada stavka smije prijeći u iduću fazu.",
+      "Zbirni prikaz cijelog toka rada na razini ploče.",
     ],
     correct: 0,
     explanation: "Kanban kartica prikazuje zadatak, odgovornu osobu, rok i slicne podatke.",
@@ -1118,9 +1324,9 @@ export const questions = [
     prompt: "Koje su ključne komponente Kanbana navedene u bilješkama?",
     answers: [
       "Kanban kartice, Kanban stupci, WIP i Kanban staze sa zadacima.",
-      "Scrum Master, vlasnik proizvoda, razvojni tim i Sprint Review.",
-      "Dokument zahtjeva, dokument koda, JavaDoc i Doxygen.",
-      "Analiza zahtjeva, dizajn sustava, implementacija i održavanje.",
+      "Kanban kartice, sprintovi, vlasnik proizvoda i definicija gotovog.",
+      "Kanban ploča, Daily Scrum, WIP i retrospektiva.",
+      "Kanban stupci, vizija proizvoda, Sprint Backlog i inkrement.",
     ],
     correct: 0,
     explanation: "Bilješke zasebno navode četiri ključne Kanban komponente.",
@@ -1132,8 +1338,8 @@ export const questions = [
     answers: [
       "Čim je dovrsena i spremna.",
       "Isključivo na kraju sprinta od 2 do 4 tjedna.",
-      "Tek nakon svih faza metode vodopada.",
-      "Samo nakon Scrum of Scrums sastanka.",
+      "Kada se napuni planirani paket funkcionalnosti za sljedeći ciklus.",
+      "Kada vlasnik proizvoda zaključa popis stavki za trenutni sprint.",
     ],
     correct: 0,
     explanation: "Kanban naglasava kontinuiranu isporuku, bez čekanja kraja sprinta.",
@@ -1145,8 +1351,8 @@ export const questions = [
     answers: [
       "Za okruzenje s cestim promjenama prioriteta.",
       "Za projekte u kojima su svi zahtjevi potpuno stabilni od početka.",
-      "Za timove kojima trebaju strogo definirane Scrum uloge.",
-      "Za projekte gdje se testiranje radi samo na kraju.",
+      "Za timove koji moraju raditi u fiksnim sprintovima s unaprijed zaključanim opsegom.",
+      "Za projekte gdje je važno prvo završiti sve faze prije isporuke.",
     ],
     correct: 0,
     explanation: "Kanban je fleksibilan i dobro podnosi promjene prioriteta.",
@@ -1158,8 +1364,8 @@ export const questions = [
     answers: [
       "Zapoceti s onim što je poznato i postepeno uvoditi promjene.",
       "Uvesti radikalne promjene odmah na početku projekta.",
-      "Zamijeniti sve postojece uloge Scrum Masterom.",
-      "Zabraniti vodstvo ljudima na nizim razinama.",
+      "Zamijeniti postojeći proces potpuno novim pravilima prije prve Kanban ploče.",
+      "Uvesti promjene samo nakon što se svi zadaci završe i tok zaustavi.",
     ],
     correct: 0,
     explanation: "Kanban se uvodi postupno i postuje postojece postupke, uloge i zaduzenja.",
@@ -1171,8 +1377,8 @@ export const questions = [
     answers: [
       "Upravljati poslom tako da se stavke što brze i glatko završavaju.",
       "Dodjeljivati ljudima što više zadataka da stalno budu zauzeti.",
-      "Zaključati sve prioritete do kraja projekta.",
-      "Odrzavati samo sastanke za pregled rizika.",
+      "Povećavati broj započetih stavki kako bi ploča stalno bila popunjena.",
+      "Pratiti samo završene zadatke, a ne mjesta gdje posao zapinje.",
     ],
     correct: 0,
     explanation: "Kanban upravlja tokom rada, ne prividnom zauzetoscu ljudi.",
@@ -1197,8 +1403,8 @@ export const questions = [
     answers: [
       "Redovitom usklađivanju rada i razmjeni znanja.",
       "Zabrani promjena prioriteta tijekom rada.",
-      "Automatskom generiranju dokumentacije iz koda.",
-      "Otkazivanju sprinta odlukom vlasnika proizvoda.",
+      "Povremenoj provjeri toka rada bez utjecaja na način rada tima.",
+      "Zamjeni vizualizacije rada sastancima na kojima se usmeno prati stanje.",
     ],
     correct: 0,
     explanation: "Povratne informacije u Kanbanu uključuju redovite kratke sastanke i usklađivanje.",
@@ -1209,9 +1415,9 @@ export const questions = [
     prompt: "Koja je glavna razlika između Scruma i Kanbana?",
     answers: [
       "Scrum radi u vremenski ograničenim sprintovima, a Kanban u kontinuiranom toku rada.",
-      "Scrum nema uloge, a Kanban ima Scrum Mastera i vlasnika proizvoda.",
-      "Scrum pusta funkcionalnost čim je gotova, a Kanban ceka kraj sprinta.",
-      "Scrum je bez sastanaka, a Kanban zahtijeva Sprint Review.",
+      "Scrum i Kanban oba koriste tok rada, ali Scrum nema vremenski ograničene cikluse.",
+      "Kanban radi u sprintovima kada ima WIP limit, a Scrum isporučuje čim je stavka gotova.",
+      "Scrum ima definirane uloge i događaje, dok Kanban primarno naglašava vizualni tok i WIP.",
     ],
     correct: 0,
     explanation: "Scrum je organiziran oko sprintova, a Kanban oko kontinuiranog toka.",
@@ -1220,7 +1426,12 @@ export const questions = [
     id: "scrum-kanban-2",
     topic: "Scrum ili Kanban",
     prompt: "U kojem pristupu nema zadanih uloga članova tima?",
-    answers: ["Kanban.", "Scrum.", "Scrum of Scrums.", "Metoda vodopada."],
+    answers: [
+      "Kanban.",
+      "Scrum, jer uvijek propisuje Scrum Mastera, vlasnika proizvoda i razvojni tim.",
+      "Scrumban, jer obavezno zadržava sve Scrum uloge bez promjena.",
+      "Scrum of Scrums, jer okuplja predstavnike više već postojećih Scrum timova.",
+    ],
     correct: 0,
     explanation: "U bilješkama Kanban nema zadane uloge kao Scrum.",
   }),
@@ -1228,7 +1439,12 @@ export const questions = [
     id: "scrum-kanban-3",
     topic: "Scrum ili Kanban",
     prompt: "Koji pristup je prikladniji za rad u blokovima i stabilniji plan?",
-    answers: ["Scrum.", "Kanban.", "Doxygen.", "JavaDoc."],
+    answers: [
+      "Scrum.",
+      "Kanban, jer je primarno usmjeren na kontinuirani tok i promjene prioriteta.",
+      "Scrumban, jer potpuno ukida planiranje ciklusa i radi samo po povlačenju kartica.",
+      "Scrum of Scrums, jer je to okvir za koordinaciju više timova, a ne osnovni način rada jednog tima.",
+    ],
     correct: 0,
     explanation: "Scrum je strukturiraniji i prikladniji kada se posao može grupirati u cikluse.",
   }),
@@ -1238,9 +1454,9 @@ export const questions = [
     prompt: "Što je Scrumban?",
     answers: [
       "Hibrid Scruma i Kanbana.",
-      "Sastanak predstavnika više Scrum timova.",
-      "Dokumentacija testiranja u metodi vodopada.",
-      "Alat za generiranje dokumentacije iz komentara u kodu.",
+      "Scrum prilagođen velikom broju timova kroz sastanke predstavnika.",
+      "Kanban s dodanim elementima planiranja i pregleda, ali bez ikakve Scrum strukture.",
+      "Scrum u kojem se zadržavaju sprintovi, ali se potpuno uklanjaju WIP ograničenja.",
     ],
     correct: 0,
     explanation: "Scrumban kombinira Scrum strukturu s Kanban fleksibilnoscu.",
@@ -1252,8 +1468,8 @@ export const questions = [
     answers: [
       "Strukturu, iterativno planiranje, osvrte, preglede i prioritete.",
       "Potpuno nepostojanje uloga i ciklusa.",
-      "Isključivo Kanban kartice i WIP ograničenja.",
-      "Dokumentaciju proizvoda i procesa.",
+      "Samo vizualnu ploču i ograničenje rada u tijeku.",
+      "Kontinuiranu isporuku bez planiranja ciklusa i bez pregleda rada.",
     ],
     correct: 0,
     explanation: "Scrumban zadrzava dio Scrum strukture i planiranja.",
@@ -1265,8 +1481,8 @@ export const questions = [
     answers: [
       "Fleksibilnost, vizualni prikaz toka rada i ograničenje preuzetih zadataka.",
       "Strogo definirane Scrum uloge i obavezne sprintove.",
-      "Dokument zahtjeva i opis arhitekture sustava.",
-      "Korektivno i preventivno održavanje.",
+      "Planiranje sprinta, pregled ciklusa i retrospektivu.",
+      "Potpuno fiksan redoslijed faza i završnu isporuku nakon testiranja.",
     ],
     correct: 0,
     explanation: "Od Kanbana preuzima vizualizaciju, tok rada i ograničavanje zadataka.",
@@ -1278,8 +1494,8 @@ export const questions = [
     answers: [
       "Za timove kojima trebaju i struktura Scruma i fleksibilnost Kanbana.",
       "Za timove koji zele potpuno izbjeci vizualizaciju rada.",
-      "Za timove koji rade isključivo po vodopadnom modelu.",
-      "Za timove bez potrebe za prioritetima i ograničenjem zadataka.",
+      "Za timove koji žele zadržati sprintove, ali bez ikakvog upravljanja tokom rada.",
+      "Za timove koji žele kontinuirani tok, ali bez prioriteta i povratnih informacija.",
     ],
     correct: 0,
     explanation: "Scrumban se koristi i kao prijelaz iz Scruma u Kanban.",
@@ -1290,9 +1506,9 @@ export const questions = [
     prompt: "Kada se koristi Scrum of Scrums?",
     answers: [
       "Kada je projekt prevelik za jedan Scrum tim pa treba uskladiti više timova.",
-      "Kada jedan tim treba održati Sprint Retrospective.",
-      "Kada Product Backlog nema dovoljno detalja.",
-      "Kada se dokumentacija generira iz komentara u kodu.",
+      "Kada više Scrum timova radi na povezanom proizvodu i moraju uskladiti ovisnosti.",
+      "Kada jedan Scrum tim ima previše članova pa Daily Scrum traje dulje od očekivanog.",
+      "Kada vlasnik proizvoda želi objediniti Product Backlog bez predstavnika timova.",
     ],
     correct: 0,
     explanation: "Scrum of Scrums koordinira rad više Scrum timova.",
@@ -1303,9 +1519,9 @@ export const questions = [
     prompt: "Tko sudjeluje na Scrum of Scrums sastanku?",
     answers: [
       "Predstavnici svakog Scrum tima.",
-      "Svi krajnji korisnici proizvoda.",
-      "Samo vlasnik proizvoda i nitko drugi.",
-      "Samo sistemski administratori.",
+      "Svi članovi svih Scrum timova, kako bi svatko izravno izvijestio o svom radu.",
+      "Samo Scrum Masteri, jer razvojni timovi ne sudjeluju u koordinaciji.",
+      "Samo vlasnici proizvoda, jer se razgovara isključivo o prioritetima Backloga.",
     ],
     correct: 0,
     explanation: "Ne sudjeluju svi članovi, nego jedan ili više predstavnika svakog tima.",
@@ -1316,9 +1532,9 @@ export const questions = [
     prompt: "Koje pitanje pripada Scrum of Scrums sastanku?",
     answers: [
       "Što će vas tim raditi do idućeg sastanka što može utjecati na druge timove?",
-      "Koji je programski okvir koristen u dokumentaciji koda?",
-      "Koji su poslovni ciljevi dokumenta zahtjeva?",
-      "Koji je WIP limit za svaki Kanban stupac?",
+      "Što sam ja osobno radio jučer i što ću osobno raditi danas?",
+      "Koje stavke Product Backloga ulaze u idući sprint jednog tima?",
+      "Koju definiciju gotovog koristi razvojni tim za jednu stavku?",
     ],
     correct: 0,
     explanation: "Scrum of Scrums se fokusira na ovisnosti i utjecaj rada jednog tima na druge.",
@@ -1329,9 +1545,9 @@ export const questions = [
     prompt: "Koja je osnovna podjela dokumentacije?",
     answers: [
       "Dokumentacija proizvoda i dokumentacija procesa.",
-      "Scrum dokumentacija i Kanban dokumentacija.",
-      "Preventivna i adaptivna dokumentacija.",
-      "HTML dokumentacija i PDF dokumentacija.",
+      "Sistemska dokumentacija i korisnička dokumentacija kao jedine dvije glavne skupine.",
+      "Dokumentacija zahtjeva i dokumentacija testiranja kao potpuna podjela.",
+      "Online dokumentacija i tiskana dokumentacija kao osnovna teorijska podjela.",
     ],
     correct: 0,
     explanation: "Bilješke dokumentaciju dijele na dokumentaciju proizvoda i procesa.",
@@ -1342,9 +1558,9 @@ export const questions = [
     prompt: "Što opisuje dokumentacija proizvoda?",
     answers: [
       "Nastali proizvod i upute za rukovanje.",
-      "Samo raspored sastanaka razvojnog tima.",
-      "Samo poslovnu korespondenciju i izvještaje.",
-      "Isključivo WIP ograničenja i Kanban stupce.",
+      "Aktivnosti, rasporede, izvještaje i organizaciju rada tijekom razvoja.",
+      "Samo interne odluke tima koje nisu povezane s korištenjem proizvoda.",
+      "Isključivo metriku vremena i kadra potrošenog na projekt.",
     ],
     correct: 0,
     explanation: "Dokumentacija proizvoda opisuje proizvod i daje upute za rukovanje.",
@@ -1355,9 +1571,9 @@ export const questions = [
     prompt: "Što opisuje dokumentacija procesa?",
     answers: [
       "Aktivnosti vezane uz razvoj proizvoda.",
-      "Samo način korištenja proizvoda od strane krajnjih korisnika.",
-      "Samo strukturu koda i komentare JavaDoca.",
-      "Samo gotove inkremente u Scrum sprintovima.",
+      "Gotov proizvod i upute za njegovo korištenje.",
+      "Isključivo tehničku strukturu izvornog koda.",
+      "Samo korisničke upute prilagođene krajnjim korisnicima.",
     ],
     correct: 0,
     explanation: "Dokumentacija procesa prati planove, rasporede, izvještaje i slicne aktivnosti razvoja.",
@@ -1369,8 +1585,8 @@ export const questions = [
     answers: [
       "Dokumenti koji opisuju sustav, njegove dijelove i temeljnu tehnologiju.",
       "Upute za krajnje korisnike bez tehničkih detalja.",
-      "Samo marketinski opis proizvoda.",
-      "Popis Kanban kartica za trenutni tok rada.",
+      "Dokumenti koji opisuju samo raspored aktivnosti tijekom projekta.",
+      "Dokumenti koji prate razvojni proces, ali ne opisuju sam proizvod.",
     ],
     correct: 0,
     explanation: "Sistemska dokumentacija je tehnički orijentirana i opisuje sustav.",
@@ -1382,8 +1598,8 @@ export const questions = [
     answers: [
       "Dokument zahtjeva, opis arhitekture, opis koda i dokumentacija testiranja.",
       "FAQ, video upute i portali za pomoć krajnjim korisnicima.",
-      "Samo bilješke sa sastanaka i poslovna korespondencija.",
-      "Samo Product Backlog i Sprint Backlog.",
+      "Projektni planovi, rasporedi testiranja i izvještaji o napretku.",
+      "Projektni planovi, procjene, izvještaji i metrika razvoja.",
     ],
     correct: 0,
     explanation: "Sistemska dokumentacija uključuje zahtjeve, arhitekturu, kod, validaciju i testiranje.",
@@ -1394,9 +1610,9 @@ export const questions = [
     prompt: "Što opisuje dokument zahtjeva?",
     answers: [
       "Što proizvod treba raditi i koje funkcionalnosti treba imati.",
-      "Koliko je zadataka ostalo u trenutnom sprintu.",
-      "Koji su komentari potrebni za JavaDoc tagove.",
-      "Kako krajnji korisnik pristupa portalu za pomoć.",
+      "Kako je sustav tehnički podijeljen na komponente i module.",
+      "Koji su testni slučajevi već izvedeni i s kojim rezultatima.",
+      "Kako korisnik nakon isporuke koristi gotovu funkcionalnost.",
     ],
     correct: 0,
     explanation: "Dokument zahtjeva sadrzi funkcionalnosti, poslovna pravila, korisničke price i slučajeve.",
@@ -1407,9 +1623,9 @@ export const questions = [
     prompt: "Što treba biti navedeno u dokumentu zahtjeva?",
     answers: [
       "Uloge, ciljevi, pretpostavke, korisničke price, interakcija i pitanja.",
-      "Samo popis programskih jezika i verzija alata.",
-      "Samo tri pitanja za Daily Scrum.",
-      "Samo WIP limit i stupci Kanban ploce.",
+      "Samo arhitekturni dijagrami i opis korištene tehnologije.",
+      "Samo rezultati testiranja i popis pronađenih grešaka.",
+      "Samo upute za instalaciju i svakodnevno korištenje proizvoda.",
     ],
     correct: 0,
     explanation: "Dokument zahtjeva treba jasno opisati svrhu, značajke, ponasanje i kontekst proizvoda.",
@@ -1421,8 +1637,8 @@ export const questions = [
     answers: [
       "Najvažnije arhitekturne odluke i prikaz rješenja.",
       "Samo krajnje korisničke upute za rad.",
-      "Samo dnevni plan rada u sprintu.",
-      "Samo broj testova koji nisu uspjeli.",
+      "Popis funkcionalnosti koje proizvod mora imati iz perspektive zahtjeva.",
+      "Postupke kojima se provjerava ispravnost pojedinih značajki.",
     ],
     correct: 0,
     explanation: "Arhitekturna dokumentacija opisuje odluke, principe, rješenja i dijagrame.",
@@ -1433,9 +1649,9 @@ export const questions = [
     prompt: "Kome je prvenstveno namijenjena dokumentacija o kodu?",
     answers: [
       "Developerima.",
-      "Isključivo krajnjim korisnicima.",
-      "Samo vlasniku proizvoda.",
-      "Predstavnicima Scrum of Scrums sastanka.",
+      "Projektnim voditeljima kojima treba samo pregled rokova i statusa razvoja.",
+      "Krajnjim korisnicima, ali samo ako dokumentacija ne sadrži tehničke detalje.",
+      "Sistemskim administratorima, dok developerima primarno služi korisnička dokumentacija.",
     ],
     correct: 0,
     explanation: "Dokumentacija o kodu opisuje način rada koda i tehničke detalje.",
@@ -1447,8 +1663,8 @@ export const questions = [
     answers: [
       "Opci pristup testiranju.",
       "Što se testira i u kojem trenutku.",
-      "Koji korisnik je odgovoran za funkcionalnost.",
-      "Koji je idealni burn-down grafikon.",
+      "Konkretne korake kojima se provjerava svaka pojedina značajka.",
+      "Završni popis pronađenih grešaka nakon provedbe svih testova.",
     ],
     correct: 0,
     explanation: "Strategija testiranja opisuje pristup, strukturu, resurse i prioritete.",
@@ -1459,9 +1675,9 @@ export const questions = [
     prompt: "Što opisuje plan testiranja?",
     answers: [
       "Što se treba testirati i kada.",
-      "Dugorocnu viziju proizvoda.",
-      "Korisničke video upute.",
-      "Redoslijed stavki u Product Backlogu.",
+      "Opći pristup i prioritete testiranja bez konkretnih rokova.",
+      "Postupke kojima se pojedina značajka verificira.",
+      "Tehničku arhitekturu sustava koji će se testirati.",
     ],
     correct: 0,
     explanation: "Plan testiranja definira stavke, metode, vremenske okvire, uloge i zaduzenja.",
@@ -1472,9 +1688,9 @@ export const questions = [
     prompt: "Što radi specifikacija testnih slučajeva?",
     answers: [
       "Opisuje postupke kojima se verificira svaka znacajka.",
-      "Generira HTML dokumentaciju za Java klase.",
-      "Prikazuje preostali posao kroz vrijeme.",
-      "Određuje tko sudjeluje u Scrum of Scrums sastanku.",
+      "Definira što se treba testirati i u kojem vremenskom okviru.",
+      "Opisuje opći pristup testiranju i raspoložive resurse.",
+      "Bilježi samo konačni rezultat testiranja bez postupka provjere.",
     ],
     correct: 0,
     explanation: "Specifikacije testnih slučajeva povezuju značajke s postupcima provjere.",
@@ -1485,9 +1701,9 @@ export const questions = [
     prompt: "Kome je namijenjena korisnička dokumentacija?",
     answers: [
       "Krajnjim korisnicima i sistemskim administratorima.",
-      "Samo programerima koji održavaju kod.",
-      "Samo Scrum Masteru i vlasniku proizvoda.",
-      "Samo testnom timu za specifikaciju testova.",
+      "Korisnicima proizvoda, ali ne i administratorima koji ga održavaju.",
+      "Developerima i testerima koji trebaju razumjeti unutarnju strukturu sustava.",
+      "Timovima koji planiraju razvoj, procjene i rasporede projekta.",
     ],
     correct: 0,
     explanation: "Korisnička dokumentacija mora biti prilagođena znanju korisnika.",
@@ -1499,8 +1715,8 @@ export const questions = [
     answers: [
       "Česta pitanja, video upute, ugrađenu pomoć i portale za pomoć.",
       "Samo arhitekturne dijagrame i sigurnosne mjere.",
-      "Samo dokument zahtjeva i poslovna pravila.",
-      "Samo Sprint Backlog i Daily Scrum zapisnik.",
+      "Upute za instalaciju i rad, ali bez interaktivne pomoći ili često postavljanih pitanja.",
+      "Samo planove, procjene i metriku rada razvojnog tima.",
     ],
     correct: 0,
     explanation: "Online dokumentacija treba pomagati korisniku u korištenju proizvoda.",
@@ -1511,9 +1727,9 @@ export const questions = [
     prompt: "Zašto je kod korisničke dokumentacije važno prikupljati povratne informacije korisnika?",
     answers: [
       "Da bi se dokumentacija mogla stalno ažurirati i poboljšavati prema stvarnim potrebama korisnika.",
-      "Da bi korisnici mogli mijenjati arhitekturu sustava bez razvojnog tima.",
-      "Da bi se izbjeglo pisanje sistemske dokumentacije.",
-      "Da bi se Product Backlog mogao zamijeniti korisničkim uputama.",
+      "Da bi korisnici mogli sami odrediti tehničku strukturu dokumentacije sustava.",
+      "Da bi se svaka korisnička primjedba odmah pretvorila u novu funkcionalnost proizvoda.",
+      "Da bi se korisnička dokumentacija mogla zaključati nakon prve objave proizvoda.",
     ],
     correct: 0,
     explanation: "Povratne informacije pomažu da korisnička dokumentacija ostane korisna i razumljiva.",
@@ -1524,9 +1740,9 @@ export const questions = [
     prompt: "Što pripada dokumentaciji procesa?",
     answers: [
       "Projektni planovi, rasporedi testiranja, izvještaji, standardi i bilješke sa sastanaka.",
-      "Samo upute za krajnje korisnike.",
-      "Samo komentari iz izvornog koda.",
-      "Samo Kanban kartice i Scrum događaji.",
+      "Dokument zahtjeva, opis arhitekture, opis koda i dokumentacija testiranja.",
+      "FAQ, video upute, ugrađena pomoć i portali za krajnje korisnike.",
+      "Opis proizvoda i upute za rukovanje nakon isporuke.",
     ],
     correct: 0,
     explanation: "Dokumentacija procesa prati aktivnosti i organizaciju razvoja.",
@@ -1537,9 +1753,9 @@ export const questions = [
     prompt: "Što su planovi, procjene i rasporedi u dokumentaciji procesa?",
     answers: [
       "Dokumenti koji obično nastaju prije razvoja, ali se mogu prilagođavati tijekom izrade softvera.",
-      "Komentari u kodu iz kojih JavaDoc generira HTML dokumentaciju.",
-      "Popis zadataka u sprintu koji pripada isključivo razvojnom timu.",
-      "Definicija gotovog koja vrijedi za više Scrum timova.",
+      "Dokumenti koji nastaju samo nakon razvoja i služe za opis gotovog proizvoda.",
+      "Dokumenti procesa koji se jednom napišu i ne mijenjaju tijekom razvoja.",
+      "Dokumenti koji zamjenjuju potrebu za izvještajima i metrikom tijekom projekta.",
     ],
     correct: 0,
     explanation: "Planovi, procjene i rasporedi pomažu organizirati razvoj i mogu se mijenjati tijekom rada.",
@@ -1550,9 +1766,9 @@ export const questions = [
     prompt: "Čemu služe izvještaji i metrika u dokumentaciji procesa?",
     answers: [
       "Praćenju korištenja vremena i kadra tijekom razvoja softvera.",
-      "Opisivanju parametara i povratnih vrijednosti Java metoda.",
-      "Ogranicavanju broja zadataka u Kanban stupcu.",
-      "Odredjivanju je li sprint moguće otkazati.",
+      "Praćenju stanja projekta, ali bez uvida u utrošeno vrijeme i resurse.",
+      "Opisivanju gotovog proizvoda iz perspektive krajnjeg korisnika.",
+      "Zamjeni projektnih planova kada se razvoj počne odvijati drukčije od očekivanog.",
     ],
     correct: 0,
     explanation: "Izvještaji i metrika daju uvid u resurse i tijek razvoja.",
@@ -1564,8 +1780,8 @@ export const questions = [
     answers: [
       "Treba je biti dovoljno, ali ne prekratko ni preopsežno.",
       "Uvijek mora biti što opsežnija, bez obzira na ponavljanje.",
-      "Treba je izbjegavati jer usporava razvoj.",
-      "Dokumentacija je konačna čim se proizvod pusti u pogon.",
+      "Treba sadržavati dovoljno informacija bez nepotrebnog ponavljanja i opterećenja.",
+      "Treba biti kratka, čak i ako zbog toga ne pokriva bitne odluke i upute.",
     ],
     correct: 0,
     explanation: "Premalo dokumentacije stvara greške, a previše stvara ponavljanje i opterećenje.",
@@ -1577,8 +1793,8 @@ export const questions = [
     answers: [
       "Dokumentacija nikad nije konačna, nego se stalno nadopunjuje.",
       "Dokumentacija je zaključana čim se završi analiza zahtjeva.",
-      "Dokumentacija se piše samo nakon puštanja proizvoda u pogon.",
-      "Dokumentacija se u agilnim metodama potpuno izbacuje.",
+      "Dokumentacija se može mijenjati, ali samo prije prve isporuke proizvoda.",
+      "Dokumentacija se nadopunjuje samo ako se mijenja programski kod.",
     ],
     correct: 0,
     explanation: "Bilješke navode da se dokumentacija stalno nadopunjuje.",
@@ -1589,9 +1805,9 @@ export const questions = [
     prompt: "Kakva je kvalitetna dokumentacija?",
     answers: [
       "Precizna, jasna i relevantna.",
-      "Što duza, bez obzira na ponavljanje.",
-      "Napisana samo nakon završetka projekta.",
-      "Namijenjena isključivo voditelju projekta.",
+      "Detaljna, ali samo ako sadrži sve informacije bez obzira na relevantnost.",
+      "Kratka i pregledna, čak i ako izostavlja važne tehničke odluke.",
+      "Usmjerena na jednu skupinu korisnika, bez obzira na stvarne potrebe ostalih čitatelja.",
     ],
     correct: 0,
     explanation: "Bilješke naglasavaju preciznost, jasnocu i relevantnost.",
@@ -1615,9 +1831,9 @@ export const questions = [
     prompt: "Čemu služe generatori dokumentacije?",
     answers: [
       "Laksem i brzem stvaranju dokumentacije, često iz komentara u kodu.",
-      "Upravljanju WIP limitima na Kanban ploci.",
-      "Odrzavanju dnevnih Scrum sastanaka.",
-      "Pretvaranju zahtjeva u arhitekturu sustava.",
+      "Ručnom pisanju korisničkih uputa bez povezivanja s izvornim kodom.",
+      "Automatskom stvaranju dijela dokumentacije, ali bez korištenja komentara ili strukture koda.",
+      "Izradi procesne dokumentacije poput rasporeda, procjena i metrika razvoja.",
     ],
     correct: 0,
     explanation: "Generatori dokumentacije automatiziraju dio izrade dokumentacije.",
@@ -1628,9 +1844,9 @@ export const questions = [
     prompt: "Što je Doxygen?",
     answers: [
       "Alat za generiranje dokumentacije, primarno za C++, ali podržava i druge jezike.",
-      "Scrum događaj za pregled inkrementa.",
-      "Kanban praksa za ograničavanje rada u tijeku.",
-      "Vrsta korisničke dokumentacije za FAQ.",
+      "Format komentara namijenjen isključivo Java klasama i metodama.",
+      "Alat za generiranje dokumentacije, ali namijenjen samo korisničkim uputama izvan koda.",
+      "Alat koji opisuje strukturu projekta, ali ne može koristiti komentare iz izvornog koda.",
     ],
     correct: 0,
     explanation: "Doxygen generira dokumentaciju iz komentara u kodu.",
@@ -1641,9 +1857,9 @@ export const questions = [
     prompt: "Što Doxygen može napraviti osim generiranja tekstualne dokumentacije?",
     answers: [
       "Prikazati strukturu koda i odnose medju elementima pomoću automatski generiranih grafova.",
-      "Održati Sprint Review i prilagoditi Product Backlog.",
-      "Ograniciti broj Kanban kartica u stupcu.",
-      "Odrediti redoslijed implementacije segmenata proizvoda.",
+      "Generirati HTML dokumentaciju, ali bez prikaza odnosa među elementima koda.",
+      "Prikazati odnose među elementima, ali samo ako ih developer ručno nacrta.",
+      "Izraditi korisničke upute iz komentara, ali bez analize strukture izvornog koda.",
     ],
     correct: 0,
     explanation: "Bilješke navode da Doxygen može izvuci strukturu koda i prikazati odnose.",
@@ -1654,9 +1870,9 @@ export const questions = [
     prompt: "Što JavaDoc generira?",
     answers: [
       "HTML dokumentaciju za Java kod iz komentara.",
-      "Burn-down grafikon za Scrum sprint.",
-      "Product Backlog iz korisničkih priča.",
-      "Dokument zahtjeva iz Kanban kartica.",
+      "Grafove odnosa u C++ kodu kao primarni oblik dokumentacije.",
+      "HTML dokumentaciju za bilo koji programski jezik bez posebnog formata komentara.",
+      "Procesnu dokumentaciju iz planova, procjena i rasporeda razvoja.",
     ],
     correct: 0,
     explanation: "JavaDoc je vezan uz dokumentiranje Java koda.",
@@ -1667,9 +1883,9 @@ export const questions = [
     prompt: "Koje dvije vrste komentara se spominju kod JavaDoca?",
     answers: [
       "Komentari na razini klase i komentari na razini članova klase.",
-      "Komentari Product Backloga i komentari Sprint Backloga.",
-      "Komentari sistemske dokumentacije i komentari korisničke dokumentacije.",
-      "Komentari WIP-a i komentari Kanban stupaca.",
+      "Komentari na razini projekta i komentari na razini korisničkih uputa.",
+      "Komentari na razini paketa i komentari na razini testnog plana.",
+      "Komentari za opis zahtjeva i komentari za opis arhitekture sustava.",
     ],
     correct: 0,
     explanation: "JavaDoc razlikuje komentare za klasu i za članove poput atributa i metoda.",
@@ -1696,9 +1912,9 @@ export const questions = [
     prompt: "Koji alati su navedeni kao drugi generatori dokumentacije?",
     answers: [
       "Sphinx, Dr. Explain i PHPDocumentator.",
-      "Scrum, Kanban i Scrumban.",
-      "Product Backlog, Sprint Backlog i Inkrement.",
-      "Waterfall, RAD i DevOps.",
+      "Doxygen, JavaDoc i dokument zahtjeva.",
+      "Sphinx, JavaDoc i dokumentacija procesa.",
+      "Dr. Explain, Doxygen i plan testiranja.",
     ],
     correct: 0,
     explanation: "Bilješke navode Sphinx, Dr. Explain i PHPDocumentator kao dodatne alate.",
