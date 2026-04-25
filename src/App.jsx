@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import notesRaw from "../notes.md?raw";
 import pdfUrl from "../kolokvij-1-sekcije-1-i-3.pdf?url";
 import { questions as baseQuestions } from "./questions";
+
+const quizStorageKey = "kolokvij-quiz-state";
 
 function shuffle(array) {
   const copy = [...array];
@@ -26,6 +28,56 @@ function prepareQuestionSet(mode, sourceQuestions = baseQuestions) {
     ...question,
     options: shuffle(question.options),
   }));
+}
+
+function getStoredQuizState() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  try {
+    const rawState = window.localStorage.getItem(quizStorageKey);
+
+    if (!rawState) {
+      return null;
+    }
+
+    const parsedState = JSON.parse(rawState);
+
+    if (!parsedState || !Array.isArray(parsedState.questions)) {
+      return null;
+    }
+
+    return parsedState;
+  } catch {
+    return null;
+  }
+}
+
+function createInitialQuizState() {
+  const storedState = getStoredQuizState();
+
+  if (
+    storedState &&
+    typeof storedState.questionMode === "string" &&
+    typeof storedState.currentIndex === "number" &&
+    Array.isArray(storedState.questions) &&
+    storedState.questions.length > 0 &&
+    storedState.currentIndex >= 0 &&
+    storedState.currentIndex < storedState.questions.length &&
+    Array.isArray(storedState.answers)
+  ) {
+    return storedState;
+  }
+
+  return {
+    questionMode: "sequential",
+    questions: prepareQuestions(),
+    currentIndex: 0,
+    selectedOptionId: null,
+    answers: [],
+    quizFinished: false,
+  };
 }
 
 function buildTopicStats(answeredQuestions) {
@@ -261,24 +313,53 @@ function PdfPanel({ onClose, page }) {
 }
 
 function App() {
-  const [questionMode, setQuestionMode] = useState("sequential");
-  const [questions, setQuestions] = useState(() => prepareQuestions());
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedOptionId, setSelectedOptionId] = useState(null);
-  const [answers, setAnswers] = useState([]);
-  const [quizFinished, setQuizFinished] = useState(false);
+  const [initialQuizState] = useState(() => createInitialQuizState());
+  const [questionMode, setQuestionMode] = useState(initialQuizState.questionMode);
+  const [questions, setQuestions] = useState(initialQuizState.questions);
+  const [currentIndex, setCurrentIndex] = useState(initialQuizState.currentIndex);
+  const [selectedOptionId, setSelectedOptionId] = useState(initialQuizState.selectedOptionId);
+  const [answers, setAnswers] = useState(initialQuizState.answers);
+  const [quizFinished, setQuizFinished] = useState(initialQuizState.quizFinished);
   const [pendingMode, setPendingMode] = useState(null);
   const [studyPanel, setStudyPanel] = useState(null);
   const [pdfPage, setPdfPage] = useState(null);
 
   const currentQuestion = questions[currentIndex];
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(
+        quizStorageKey,
+        JSON.stringify({
+          questionMode,
+          questions,
+          currentIndex,
+          selectedOptionId,
+          answers,
+          quizFinished,
+        }),
+      );
+    } catch {
+      // Persistence is best-effort. The quiz still works without localStorage.
+    }
+  }, [questionMode, questions, currentIndex, selectedOptionId, answers, quizFinished]);
+
+  useEffect(() => {
+    const savedAnswer = answers.find((answer) => answer.questionId === currentQuestion?.id);
+    setSelectedOptionId(savedAnswer?.selectedOptionId ?? null);
+  }, [answers, currentQuestion?.id]);
   const score = answers.filter((item) => item.isCorrect).length;
   const progress = ((currentIndex + 1) / questions.length) * 100;
 
   const answeredQuestions = useMemo(
     () =>
-      answers.map((answer) => {
+      answers.flatMap((answer) => {
         const question = questions.find((item) => item.id === answer.questionId);
+
+        if (!question) {
+          return [];
+        }
+
         return {
           ...question,
           isCorrect: answer.isCorrect,
@@ -292,6 +373,9 @@ function App() {
 
   function handleSelect(optionId) {
     if (selectedOptionId) {
+      if (optionId === selectedOptionId) {
+        handleNext();
+      }
       return;
     }
 
@@ -317,6 +401,16 @@ function App() {
 
     setCurrentIndex((previous) => previous + 1);
     setSelectedOptionId(null);
+  }
+
+  function handleProgressChange(event) {
+    const nextIndex = Number(event.target.value);
+
+    if (Number.isNaN(nextIndex)) {
+      return;
+    }
+
+    setCurrentIndex(nextIndex);
   }
 
   function handleRetryQuestion() {
@@ -415,6 +509,19 @@ function App() {
             Točnost: <strong>{percentage}%</strong>
           </p>
 
+          <div className="actions result-actions">
+            <button className="button button-primary" onClick={() => handleRestart("all")}>
+              Novi puni kviz
+            </button>
+            <button
+              className="button button-secondary"
+              disabled={wrongCount === 0}
+              onClick={() => handleRestart("wrong")}
+            >
+              Ponovi samo kriva
+            </button>
+          </div>
+
           <div className="summary-grid">
             <article className="summary-card">
               <span>Pogođeno</span>
@@ -455,33 +562,24 @@ function App() {
 
                   return (
                     <article key={item.id} className="mistake-card">
-                      <p className="mistake-topic">{item.topic}</p>
-                      <h3>{item.prompt}</h3>
-                      <p>
-                        Tvoj odgovor: <strong>{selected?.text ?? "Nema"}</strong>
-                      </p>
-                      <p>
-                        Točan odgovor: <strong>{correct?.text}</strong>
-                      </p>
-                      <p className="mistake-explanation">{item.explanation}</p>
+                      <div className="mistake-card-header">
+                        <p className="mistake-topic">{item.topic}</p>
+                        <h3>{item.prompt}</h3>
+                      </div>
+                      <div className="mistake-answer-row mistake-answer-row-wrong">
+                        <span className="mistake-answer-label">Tvoj odgovor</span>
+                        <strong className="mistake-answer-value">{selected?.text ?? "Nema"}</strong>
+                      </div>
+                      <div className="mistake-answer-row mistake-answer-row-correct">
+                        <span className="mistake-answer-label">Točan odgovor</span>
+                        <strong className="mistake-answer-value">{correct?.text}</strong>
+                      </div>
                     </article>
                   );
                 })
             )}
           </div>
 
-          <div className="actions">
-            <button className="button button-primary" onClick={() => handleRestart("all")}>
-              Novi puni kviz
-            </button>
-            <button
-              className="button button-secondary"
-              disabled={wrongCount === 0}
-              onClick={() => handleRestart("wrong")}
-            >
-              Ponovi samo kriva
-            </button>
-          </div>
         </section>
       </main>
     );
@@ -545,8 +643,20 @@ function App() {
               {currentIndex + 1}/{questions.length}
             </strong>
           </div>
-          <div className="progress-track" aria-hidden="true">
-            <div className="progress-fill" style={{ width: `${progress}%` }} />
+          <div className="progress-slider-wrap">
+            <input
+              className="progress-slider"
+              type="range"
+              min="0"
+              max={questions.length - 1}
+              step="1"
+              value={currentIndex}
+              onChange={handleProgressChange}
+              aria-label="Odaberi pitanje"
+            />
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
           </div>
         </div>
 
@@ -584,11 +694,13 @@ function App() {
                 <button
                   key={option.id}
                   className={`option-card ${stateClass}`}
-                  disabled={Boolean(selectedOptionId)}
                   onClick={() => handleSelect(option.id)}
                 >
                   <span className="option-letter">{displayLetter}</span>
-                  <span>{option.text}</span>
+                  <span className="option-content">
+                    <span className="option-text">{option.text}</span>
+                    {isSelected ? <span className="option-next-hint">Klikni opet za dalje</span> : null}
+                  </span>
                 </button>
               );
             })}
