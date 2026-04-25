@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import notesRaw from "../notes.md?raw";
+import pdfUrl from "../Programsko inženjerstvo i informacijski sustavi.pdf?url";
 import { questions as baseQuestions } from "./questions";
 
 function shuffle(array) {
@@ -48,6 +49,20 @@ function BookIcon() {
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
       <path d="M8 7h8" />
       <path d="M8 11h6" />
+    </svg>
+  );
+}
+
+function PdfIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
+      <path d="M14 3v5a2 2 0 0 0 2 2h5" />
+      <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l7 7v9a2 2 0 0 1-2 2Z" />
+      <path d="M8 15h1.5a1.5 1.5 0 0 0 0-3H8v5" />
+      <path d="M13 12v5" />
+      <path d="M13 12h1a2 2 0 0 1 0 4h-1" />
+      <path d="M18 12h-2v5" />
+      <path d="M16 15h1.5" />
     </svg>
   );
 }
@@ -188,6 +203,23 @@ function NotesPanel({ onClose }) {
   );
 }
 
+function PdfPanel({ onClose }) {
+  return (
+    <aside className="panel pdf-panel" aria-label="PDF skripta">
+      <div className="notes-header">
+        <div>
+          <p className="eyebrow">PDF</p>
+          <h2>Skripta</h2>
+        </div>
+        <button className="icon-button" type="button" aria-label="Zatvori PDF" onClick={onClose}>
+          <CloseIcon />
+        </button>
+      </div>
+      <iframe className="pdf-frame" title="Programsko inženjerstvo i informacijski sustavi PDF" src={pdfUrl} />
+    </aside>
+  );
+}
+
 function App() {
   const [questionMode, setQuestionMode] = useState("sequential");
   const [questions, setQuestions] = useState(() => prepareQuestions());
@@ -196,7 +228,7 @@ function App() {
   const [answers, setAnswers] = useState([]);
   const [quizFinished, setQuizFinished] = useState(false);
   const [pendingMode, setPendingMode] = useState(null);
-  const [notesOpen, setNotesOpen] = useState(false);
+  const [studyPanel, setStudyPanel] = useState(null);
 
   const currentQuestion = questions[currentIndex];
   const score = answers.filter((item) => item.isCorrect).length;
@@ -395,7 +427,7 @@ function App() {
   const correctOptionId = selectedOptionId ? currentQuestion.correctId : null;
 
   return (
-    <main className={notesOpen ? "app-shell app-shell-notes" : "app-shell"}>
+    <main className={studyPanel ? "app-shell app-shell-notes" : "app-shell"}>
       <div className="study-layout">
       <section className="panel quiz-panel">
         <div className="quiz-header">
@@ -406,13 +438,22 @@ function App() {
 
           <div className="header-controls">
             <button
-              className="icon-button"
+              className={studyPanel === "notes" ? "icon-button icon-button-active" : "icon-button"}
               type="button"
-              aria-label={notesOpen ? "Sakrij natuknice" : "Prikazi natuknice"}
-              title={notesOpen ? "Sakrij natuknice" : "Prikazi natuknice"}
-              onClick={() => setNotesOpen((value) => !value)}
+              aria-label={studyPanel === "notes" ? "Sakrij natuknice" : "Prikazi natuknice"}
+              title={studyPanel === "notes" ? "Sakrij natuknice" : "Prikazi natuknice"}
+              onClick={() => setStudyPanel((value) => (value === "notes" ? null : "notes"))}
             >
               <BookIcon />
+            </button>
+            <button
+              className={studyPanel === "pdf" ? "icon-button icon-button-active" : "icon-button"}
+              type="button"
+              aria-label={studyPanel === "pdf" ? "Sakrij PDF" : "Prikazi PDF"}
+              title={studyPanel === "pdf" ? "Sakrij PDF" : "Prikazi PDF"}
+              onClick={() => setStudyPanel((value) => (value === "pdf" ? null : "pdf"))}
+            >
+              <PdfIcon />
             </button>
 
             <div className="mode-switch" aria-label="Nacin redoslijeda pitanja">
@@ -514,7 +555,8 @@ function App() {
         </div>
       </section>
 
-      {notesOpen ? <NotesPanel onClose={() => setNotesOpen(false)} /> : null}
+      {studyPanel === "notes" ? <NotesPanel onClose={() => setStudyPanel(null)} /> : null}
+      {studyPanel === "pdf" ? <PdfPanel onClose={() => setStudyPanel(null)} /> : null}
       </div>
 
       {pendingMode ? (
