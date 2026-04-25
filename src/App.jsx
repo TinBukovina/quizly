@@ -67,6 +67,16 @@ function PdfIcon() {
   );
 }
 
+function ExternalIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
+      <path d="M14 3h7v7" />
+      <path d="m10 14 11-11" />
+      <path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" />
+    </svg>
+  );
+}
+
 function CloseIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="icon">
@@ -211,11 +221,25 @@ function PdfPanel({ onClose }) {
           <p className="eyebrow">PDF</p>
           <h2>Skripta</h2>
         </div>
-        <button className="icon-button" type="button" aria-label="Zatvori PDF" onClick={onClose}>
-          <CloseIcon />
-        </button>
+        <div className="panel-actions">
+          <a
+            className="icon-button"
+            href={pdfUrl}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Otvori PDF u novom tabu"
+            title="Otvori PDF u novom tabu"
+          >
+            <ExternalIcon />
+          </a>
+          <button className="icon-button" type="button" aria-label="Zatvori PDF" onClick={onClose}>
+            <CloseIcon />
+          </button>
+        </div>
       </div>
-      <iframe className="pdf-frame" title="Programsko inženjerstvo i informacijski sustavi PDF" src={pdfUrl} />
+      <div className="pdf-body">
+        <iframe className="pdf-frame" title="Programsko inženjerstvo i informacijski sustavi PDF" src={pdfUrl} />
+      </div>
     </aside>
   );
 }
@@ -335,6 +359,15 @@ function App() {
     setPendingMode(null);
   }
 
+  function handlePdfOpen() {
+    if (window.matchMedia("(max-width: 760px)").matches) {
+      window.open(pdfUrl, "_blank", "noreferrer");
+      return;
+    }
+
+    setStudyPanel((value) => (value === "pdf" ? null : "pdf"));
+  }
+
   if (quizFinished) {
     const total = answers.length;
     const percentage = Math.round((score / total) * 100);
@@ -451,7 +484,7 @@ function App() {
               type="button"
               aria-label={studyPanel === "pdf" ? "Sakrij PDF" : "Prikazi PDF"}
               title={studyPanel === "pdf" ? "Sakrij PDF" : "Prikazi PDF"}
-              onClick={() => setStudyPanel((value) => (value === "pdf" ? null : "pdf"))}
+              onClick={handlePdfOpen}
             >
               <PdfIcon />
             </button>

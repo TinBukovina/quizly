@@ -159,6 +159,7 @@ h3 {
   background: var(--surface);
   color: var(--muted);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .icon-button:hover {
@@ -557,6 +558,12 @@ h3 {
   font-size: 1.2rem;
 }
 
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .notes-content {
   min-height: 0;
   overflow: auto;
@@ -633,6 +640,17 @@ h3 {
 
 .notes-content th {
   background: var(--surface-muted);
+}
+
+.pdf-panel {
+  height: calc(100vh - 48px);
+}
+
+.pdf-body {
+  min-height: 0;
+  overflow: auto;
+  background: #eef2f7;
+  -webkit-overflow-scrolling: touch;
 }
 
 .pdf-frame {
@@ -715,8 +733,9 @@ h3 {
     position: fixed;
     inset: 0;
     z-index: 15;
+    height: 100dvh;
     max-height: none;
-    min-height: 100vh;
+    min-height: 100dvh;
     border: 0;
     border-radius: 0;
     box-shadow: none;
