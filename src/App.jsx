@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import notesRaw from "../notes.md?raw";
-import pdfUrl from "../Programsko inženjerstvo i informacijski sustavi.pdf?url";
+import pdfUrl from "../kolokvij-1-sekcije-1-i-3.pdf?url";
 import { questions as baseQuestions } from "./questions";
 
 function shuffle(array) {
@@ -612,7 +612,7 @@ function App() {
                 Odustani
               </button>
               <button className="button button-primary" type="button" onClick={confirmModeChange}>
-                Kreni ispocetka
+                Kreni ispočetka
               </button>
             </div>
           </section>
